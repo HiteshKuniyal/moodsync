@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   const audioRef = useRef(null);
   const location = useLocation();
 
-  // Create Om Mani Padme Hum chant with richer harmonics
+  // Create OM chant with deep meditative resonance
   useEffect(() => {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioContext();
@@ -16,21 +16,19 @@ const Layout = ({ children }) => {
     let gainNodes = [];
     let lfoOscillators = [];
 
-    const playMantra = () => {
+    const playOM = () => {
       if (oscillators.length > 0) return;
 
-      // Om Mani Padme Hum fundamental frequencies with Tibetan singing bowl harmonics
-      const fundamentals = [
-        { freq: 136.1, gain: 0.08 },  // Om - OM (Earth tone)
-        { freq: 141.27, gain: 0.06 }, // Ma - Mercury  
-        { freq: 144, gain: 0.07 },    // Ni - Mars
-        { freq: 149.74, gain: 0.055 }, // Pad - Jupiter
-        { freq: 157.04, gain: 0.05 }, // Me - Saturn
-        { freq: 164.3, gain: 0.045 }  // Hum - Uranus
+      // OM fundamental frequency (136.1 Hz - Earth tone) with harmonics
+      const omFrequencies = [
+        { freq: 136.1, gain: 0.15 },   // Fundamental OM
+        { freq: 272.2, gain: 0.08 },   // 2nd harmonic (octave)
+        { freq: 408.3, gain: 0.04 },   // 3rd harmonic
+        { freq: 204.15, gain: 0.06 }   // Sub harmonic for depth
       ];
 
-      fundamentals.forEach((note, index) => {
-        // Main tone
+      omFrequencies.forEach((note, index) => {
+        // Main OM tone
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
         const lfo = audioContext.createOscillator();
@@ -39,18 +37,18 @@ const Layout = ({ children }) => {
         osc.type = 'sine';
         osc.frequency.setValueAtTime(note.freq, audioContext.currentTime);
         
-        // Add subtle vibrato with LFO
+        // Add very subtle vibrato for natural resonance
         lfo.type = 'sine';
-        lfo.frequency.setValueAtTime(0.5 + Math.random() * 0.5, audioContext.currentTime);
-        lfoGain.gain.setValueAtTime(0.5, audioContext.currentTime);
+        lfo.frequency.setValueAtTime(0.3, audioContext.currentTime);
+        lfoGain.gain.setValueAtTime(0.3, audioContext.currentTime);
         
         lfo.connect(lfoGain);
         lfoGain.connect(osc.frequency);
         
-        gain.gain.setValueAtTime(note.gain * volume, audioContext.currentTime);
+        gain.gain.setValueAtTime(0, audioContext.currentTime);
         
-        // Slow fade in for meditative quality
-        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + 3);
+        // Very slow fade in for deep meditative quality
+        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + 4);
 
         osc.connect(gain);
         gain.connect(audioContext.destination);
@@ -64,7 +62,7 @@ const Layout = ({ children }) => {
       });
     };
 
-    const stopMantra = () => {
+    const stopOM = () => {
       oscillators.forEach(osc => {
         try {
           osc.stop();
@@ -85,12 +83,12 @@ const Layout = ({ children }) => {
     };
 
     if (isPlaying) {
-      playMantra();
+      playOM();
     } else {
-      stopMantra();
+      stopOM();
     }
 
-    return () => stopMantra();
+    return () => stopOM();
   }, [isPlaying, volume]);
 
   const togglePlay = () => {
