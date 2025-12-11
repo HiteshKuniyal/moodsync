@@ -61,6 +61,28 @@ class MoodTrend(BaseModel):
     energy_level: int
     focus_level: int
 
+class LifestyleAssessmentCreate(BaseModel):
+    sleep_quality: int
+    nutrition: int
+    social_connection: int
+    purpose_growth: int
+    stress_management: int
+    notes: Optional[str] = None
+    date: str
+
+class LifestyleAssessment(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    sleep_quality: int
+    nutrition: int
+    social_connection: int
+    purpose_growth: int
+    stress_management: int
+    notes: Optional[str] = None
+    date: str
+    average_score: float
+
 # Helper function to generate AI guidance
 async def generate_mood_guidance(mood_data: MoodEntryCreate) -> str:
     try:
