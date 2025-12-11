@@ -226,7 +226,7 @@ const Coaches = () => {
             <div className="flex gap-3">
               <button
                 data-testid="lifestyle-assessment-btn"
-                onClick={() => navigate('/assessment')}
+                onClick={() => navigate('/lifestyle-assessment')}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg"
               >
                 <Calendar className="w-4 h-4" />
