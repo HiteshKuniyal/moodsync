@@ -28,11 +28,11 @@ const Landing = () => {
 
             <h1
               data-testid="hero-title"
-              className="text-4xl sm:text-5xl lg:text-6xl font-fraunces font-light text-foreground mb-6 tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-7xl font-playfair font-bold text-foreground mb-6 tracking-tight"
             >
               Sync Your Emotions with
               <br />
-              <span className="font-semibold text-primary">Real-Time Wellness</span>
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Real-Time Wellness</span>
             </h1>
 
             <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
