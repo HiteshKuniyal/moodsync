@@ -32,7 +32,7 @@ const Coaches = () => {
           >
             <div className="flex items-start gap-6 mb-6">
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-secondary to-secondary/70 flex items-center justify-center shadow-lg">
-                <Running className="w-10 h-10 text-white" />
+                <Activity className="w-10 h-10 text-white" />
               </div>
               <div className="flex-1">
                 <h2 className="text-3xl font-playfair font-bold text-foreground mb-2">Coach Hitesh</h2>
