@@ -125,19 +125,19 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-6">
+      <section className="py-12 md:py-24 px-4 md:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-3xl p-12 border border-primary/10">
-            <h2 className="text-3xl md:text-4xl font-fraunces font-semibold text-foreground mb-4">
+          <div className="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl md:rounded-3xl p-6 md:p-12 border border-primary/10">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-fraunces font-semibold text-foreground mb-3 md:mb-4">
               Ready to begin your wellness journey?
             </h2>
-            <p className="text-muted-foreground mb-8 text-lg">
+            <p className="text-sm md:text-base lg:text-lg text-muted-foreground mb-6 md:mb-8">
               Take the first step towards emotional awareness and well-being
             </p>
             <button
               data-testid="cta-check-in-btn"
               onClick={() => navigate('/assessment')}
-              className="px-10 py-4 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:scale-105 text-lg"
+              className="w-full sm:w-auto px-8 md:px-10 py-3 md:py-4 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:scale-105 text-sm md:text-base lg:text-lg"
             >
               Start Your Check-In Now
             </button>
