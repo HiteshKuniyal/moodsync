@@ -76,15 +76,15 @@ const Landing = () => {
             {/* Feature 1 */}
             <div
               data-testid="feature-mood-tracking"
-              className="bg-white rounded-3xl p-8 shadow-soft border border-border hover:shadow-float transition-all duration-300 emotion-card"
+              className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-soft border border-border hover:shadow-float transition-all duration-300 emotion-card"
             >
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                <Heart className="w-7 h-7 text-primary" />
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center mb-4 md:mb-6">
+                <Heart className="w-6 h-6 md:w-7 md:h-7 text-primary" />
               </div>
-              <h3 className="text-xl font-fraunces font-semibold text-foreground mb-3">
+              <h3 className="text-lg md:text-xl font-fraunces font-semibold text-foreground mb-2 md:mb-3">
                 Mindful Mood Tracking
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                 Log your emotions, energy, focus, and mental state through our gentle, guided assessment
               </p>
             </div>
