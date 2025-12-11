@@ -72,7 +72,7 @@ const Coaches = () => {
 
               <div className="bg-primary/10 rounded-2xl p-6 border border-primary/20">
                 <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                  <Running className="w-5 h-5 text-primary" />
+                  <Activity className="w-5 h-5 text-primary" />
                   Coach Hitesh's Approach
                 </h3>
                 <p className="text-sm text-foreground/80 mb-4">
