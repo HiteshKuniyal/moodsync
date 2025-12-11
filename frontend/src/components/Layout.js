@@ -104,22 +104,22 @@ const Layout = ({ children }) => {
     }}>
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-white/70 border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-              <span className="text-white text-2xl font-playfair font-bold">M</span>
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-5 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2 md:gap-4 group">
+            <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+              <span className="text-white text-lg md:text-2xl font-playfair font-bold">M</span>
             </div>
             <div>
-              <span className="text-3xl font-playfair font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent tracking-tight">Mood Sync</span>
-              <p className="text-xs text-muted-foreground -mt-1">Syncing Emotions with Wellness</p>
+              <span className="text-xl md:text-3xl font-playfair font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent tracking-tight">Mood Sync</span>
+              <p className="text-xs text-muted-foreground -mt-1 hidden md:block">Syncing Emotions with Wellness</p>
             </div>
           </Link>
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3 md:gap-8">
             <Link
               to="/assessment"
               data-testid="nav-assessment-link"
-              className={`text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors ${
                 location.pathname === '/assessment' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -128,7 +128,7 @@ const Layout = ({ children }) => {
             <Link
               to="/coaches"
               data-testid="nav-coaches-link"
-              className={`text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors hidden sm:block ${
                 location.pathname === '/coaches' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -137,7 +137,7 @@ const Layout = ({ children }) => {
             <Link
               to="/exercises"
               data-testid="nav-exercises-link"
-              className={`text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors hidden md:block ${
                 location.pathname === '/exercises' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -146,7 +146,7 @@ const Layout = ({ children }) => {
             <Link
               to="/resources"
               data-testid="nav-resources-link"
-              className={`text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors hidden md:block ${
                 location.pathname === '/resources' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -155,11 +155,11 @@ const Layout = ({ children }) => {
             <Link
               to="/history"
               data-testid="nav-history-link"
-              className={`text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors ${
                 location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
-              My Journey
+              Journey
             </Link>
           </div>
         </div>
