@@ -1,15 +1,15 @@
 /* Custom styles for Mood Sync */
 
-/* Headings with Fraunces font */
+/* Headings with Playfair Display font */
 h1, h2, h3 {
-  font-family: 'Fraunces', serif;
-  letter-spacing: -0.02em;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
-/* Body text with Manrope */
+/* Body text with Inter */
 body, p, span, div {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.6;
 }
 
