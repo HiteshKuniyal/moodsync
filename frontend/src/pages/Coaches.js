@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Running, Smile, Calendar, MessageCircle } from 'lucide-react';
+import { Heart, Activity, Smile, Calendar, MessageCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Coaches = () => {
