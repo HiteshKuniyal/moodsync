@@ -8,7 +8,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-32 px-6">
+      <section className="relative py-12 md:py-24 lg:py-32 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Hero Image Background */}
           <div className="absolute inset-0 z-0 overflow-hidden">
@@ -21,37 +21,37 @@ const Landing = () => {
           </div>
 
           <div className="relative z-10 text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 mb-8">
-              <Sparkles className="w-4 h-4 text-secondary" />
-              <span className="text-sm font-medium text-secondary">AI-Powered Wellness Support</span>
+            <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-secondary/20 border border-secondary/30 mb-6 md:mb-8">
+              <Sparkles className="w-3 md:w-4 h-3 md:h-4 text-secondary" />
+              <span className="text-xs md:text-sm font-medium text-secondary">AI-Powered Wellness Support</span>
             </div>
 
             <h1
               data-testid="hero-title"
-              className="text-4xl sm:text-5xl lg:text-7xl font-playfair font-bold text-foreground mb-6 tracking-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-playfair font-bold text-foreground mb-4 md:mb-6 tracking-tight px-4"
             >
               Sync Your Emotions with
               <br />
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Real-Time Wellness</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 md:mb-12 leading-relaxed px-4">
               Track your emotional state, receive personalized AI guidance, and discover patterns in your mental
               wellness journey. Find calm, one check-in at a time.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 px-4">
               <button
                 data-testid="get-started-btn"
                 onClick={() => navigate('/assessment')}
-                className="px-8 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:scale-105"
+                className="w-full sm:w-auto px-6 md:px-8 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 hover:scale-105 text-sm md:text-base"
               >
                 Start Your Check-In
               </button>
               <button
                 data-testid="view-history-btn"
                 onClick={() => navigate('/history')}
-                className="px-8 py-3 bg-white text-primary border border-primary/20 rounded-full font-medium hover:bg-primary/5 transition-all"
+                className="w-full sm:w-auto px-6 md:px-8 py-3 bg-white text-primary border border-primary/20 rounded-full font-medium hover:bg-primary/5 transition-all text-sm md:text-base"
               >
                 View My Journey
               </button>
