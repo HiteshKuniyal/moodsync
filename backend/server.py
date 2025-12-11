@@ -213,6 +213,46 @@ async def get_mood_trends(days: int = 14):
         logger.error(f"Error fetching mood trends: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/lifestyle/assess", response_model=LifestyleAssessment)
+async def submit_lifestyle_assessment(assessment: LifestyleAssessmentCreate):
+    try:
+        # Calculate average score
+        scores = [
+            assessment.sleep_quality,
+            assessment.nutrition,
+            assessment.social_connection,
+            assessment.purpose_growth,
+            assessment.stress_management
+        ]
+        average_score = sum(scores) / len(scores)
+        
+        # Create lifestyle assessment object
+        assessment_dict = assessment.model_dump()
+        assessment_dict['average_score'] = round(average_score, 1)
+        assessment_obj = LifestyleAssessment(**assessment_dict)
+        
+        # Store in MongoDB
+        doc = assessment_obj.model_dump()
+        await db.lifestyle_assessments.insert_one(doc)
+        
+        return assessment_obj
+    except Exception as e:
+        logger.error(f"Error submitting lifestyle assessment: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/lifestyle/history", response_model=List[LifestyleAssessment])
+async def get_lifestyle_history(limit: int = 10):
+    try:
+        assessments = await db.lifestyle_assessments.find(
+            {},
+            {"_id": 0}
+        ).sort("date", -1).limit(limit).to_list(limit)
+        
+        return assessments
+    except Exception as e:
+        logger.error(f"Error fetching lifestyle history: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
