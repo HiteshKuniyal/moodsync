@@ -103,8 +103,8 @@ const Coaches = () => {
                 data-testid="schedule-hitesh-btn"
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-white rounded-full hover:bg-secondary/90 transition-all shadow-lg"
               >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp</span>
+                <Calendar className="w-4 h-4" />
+                <span>Schedule Session</span>
               </a>
               <a
                 href="https://www.instagram.com/bearded_human123"
@@ -113,7 +113,7 @@ const Coaches = () => {
                 data-testid="message-hitesh-btn"
                 className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-secondary/30 text-secondary rounded-full hover:bg-secondary/5 transition-all"
               >
-                <Calendar className="w-5 h-5" />
+                <MessageCircle className="w-5 h-5" />
                 <span>Instagram</span>
               </a>
             </div>
