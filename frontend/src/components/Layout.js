@@ -203,9 +203,9 @@ const Layout = ({ children }) => {
 
         <div className="text-right">
           <span className="text-xs font-semibold text-primary block">
-            {isPlaying ? 'Om Mani Padme Hum' : 'Paused'}
+            {isPlaying ? 'OM Chant' : 'Paused'}
           </span>
-          <span className="text-xs text-muted-foreground">Mantra Chant</span>
+          <span className="text-xs text-muted-foreground">Sacred Sound</span>
         </div>
       </div>
 
