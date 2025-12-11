@@ -96,21 +96,26 @@ const Coaches = () => {
             </div>
 
             <div className="flex gap-3">
-              <button
+              <a
+                href="https://wa.me/919557219998?text=Hi%20Coach%20Hitesh!%20I'd%20like%20to%20schedule%20a%20session."
+                target="_blank"
+                rel="noopener noreferrer"
                 data-testid="schedule-hitesh-btn"
-                onClick={() => alert('Scheduling feature coming soon! Connect with Coach Hitesh.')}
                 className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-white rounded-full hover:bg-secondary/90 transition-all shadow-lg"
               >
-                <Calendar className="w-4 h-4" />
-                <span>Schedule Session</span>
-              </button>
-              <button
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href="https://www.instagram.com/bearded_human123"
+                target="_blank"
+                rel="noopener noreferrer"
                 data-testid="message-hitesh-btn"
-                onClick={() => alert('Messaging feature coming soon!')}
-                className="px-6 py-3 bg-white border border-secondary/30 text-secondary rounded-full hover:bg-secondary/5 transition-all"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-secondary/30 text-secondary rounded-full hover:bg-secondary/5 transition-all"
               >
-                <MessageCircle className="w-5 h-5" />
-              </button>
+                <Calendar className="w-5 h-5" />
+                <span>Instagram</span>
+              </a>
             </div>
           </div>
 
