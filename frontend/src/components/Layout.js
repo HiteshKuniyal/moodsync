@@ -168,49 +168,26 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <main className="pt-24">{children}</main>
 
-      {/* Music Player - Om Mani Padme Hum */}
-      <div
-        data-testid="music-player"
-        className={`fixed bottom-8 right-8 z-50 bg-white/90 backdrop-blur-xl border border-primary/20 rounded-2xl p-3 pr-6 shadow-float flex items-center gap-4 ${
-          isPlaying ? 'playing' : ''
-        }`}
-      >
+      {/* Music Player - Simplified at top right */}
+      <div className="fixed top-24 right-6 z-50 flex items-center gap-2" data-testid="music-player">
         <button
           data-testid="music-player-toggle"
           onClick={togglePlay}
-          className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/70 hover:from-primary/90 hover:to-primary/60 flex items-center justify-center transition-all hover:scale-105 shadow-lg"
+          className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-xl border border-primary/20 hover:bg-primary/10 flex items-center justify-center transition-all hover:scale-110 shadow-lg"
         >
           {isPlaying ? (
-            <Pause className="w-5 h-5 text-white" data-testid="pause-icon" />
+            <Pause className="w-5 h-5 text-primary" data-testid="pause-icon" />
           ) : (
-            <Play className="w-5 h-5 text-white ml-0.5" data-testid="play-icon" />
+            <Play className="w-5 h-5 text-primary ml-0.5" data-testid="play-icon" />
           )}
         </button>
-
-        <div className="flex items-center gap-3 min-w-[140px]">
-          <Volume2 className="w-4 h-4 text-primary" />
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.1"
-            value={volume}
-            onChange={(e) => setVolume(parseFloat(e.target.value))}
-            data-testid="volume-slider"
-            className="w-full h-1 bg-muted rounded-full appearance-none cursor-pointer"
-          />
-        </div>
-
-        <div className="text-right">
-          <span className="text-xs font-semibold text-primary block">
-            {isPlaying ? 'OM Chant' : 'Paused'}
-          </span>
-          <span className="text-xs text-muted-foreground">Sacred Sound</span>
+        <div className={`w-10 h-10 rounded-full bg-white/90 backdrop-blur-xl border border-primary/20 flex items-center justify-center shadow-lg ${isPlaying ? 'animate-pulse' : ''}`}>
+          <Volume2 className="w-5 h-5 text-primary" />
         </div>
       </div>
 
-      {/* Developer Credit */}
-      <div className="fixed bottom-8 left-8 z-40 bg-white/80 backdrop-blur-md border border-border rounded-xl px-4 py-2 shadow-soft">
+      {/* Developer Credit - Mobile responsive */}
+      <div className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-40 bg-white/80 backdrop-blur-md border border-border rounded-xl px-3 py-1.5 md:px-4 md:py-2 shadow-soft">
         <p className="text-xs text-muted-foreground">
           Developed by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
         </p>
