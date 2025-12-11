@@ -8,33 +8,59 @@ const Layout = ({ children }) => {
   const audioRef = useRef(null);
   const location = useLocation();
 
-  // Create Om Mani Padme Hum chant using Web Audio API
+  // Create Om Mani Padme Hum chant with richer harmonics
   useEffect(() => {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioContext();
     let oscillators = [];
     let gainNodes = [];
+    let lfoOscillators = [];
 
     const playMantra = () => {
       if (oscillators.length > 0) return;
 
-      // Create harmonious frequencies for meditative mantra sound
-      const frequencies = [136.1, 204.15, 272.2]; // Om frequencies in Hz
-      
-      frequencies.forEach((freq, index) => {
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+      // Om Mani Padme Hum fundamental frequencies with Tibetan singing bowl harmonics
+      const fundamentals = [
+        { freq: 136.1, gain: 0.08 },  // Om - OM (Earth tone)
+        { freq: 141.27, gain: 0.06 }, // Ma - Mercury  
+        { freq: 144, gain: 0.07 },    // Ni - Mars
+        { freq: 149.74, gain: 0.055 }, // Pad - Jupiter
+        { freq: 157.04, gain: 0.05 }, // Me - Saturn
+        { freq: 164.3, gain: 0.045 }  // Hum - Uranus
+      ];
 
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-        gainNode.gain.setValueAtTime(volume * 0.05 * (1 - index * 0.3), audioContext.currentTime);
+      fundamentals.forEach((note, index) => {
+        // Main tone
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        const lfo = audioContext.createOscillator();
+        const lfoGain = audioContext.createGain();
 
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(note.freq, audioContext.currentTime);
+        
+        // Add subtle vibrato with LFO
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(0.5 + Math.random() * 0.5, audioContext.currentTime);
+        lfoGain.gain.setValueAtTime(0.5, audioContext.currentTime);
+        
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        
+        gain.gain.setValueAtTime(note.gain * volume, audioContext.currentTime);
+        
+        // Slow fade in for meditative quality
+        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + 3);
 
-        oscillator.start();
-        oscillators.push(oscillator);
-        gainNodes.push(gainNode);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.start();
+        lfo.start();
+        
+        oscillators.push(osc);
+        gainNodes.push(gain);
+        lfoOscillators.push(lfo);
       });
     };
 
@@ -46,8 +72,16 @@ const Layout = ({ children }) => {
           // Already stopped
         }
       });
+      lfoOscillators.forEach(lfo => {
+        try {
+          lfo.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      });
       oscillators = [];
       gainNodes = [];
+      lfoOscillators = [];
     };
 
     if (isPlaying) {
