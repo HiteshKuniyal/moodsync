@@ -210,6 +210,13 @@ const Layout = ({ children }) => {
           <span className="text-xs text-muted-foreground">Mantra Chant</span>
         </div>
       </div>
+
+      {/* Developer Credit */}
+      <div className="fixed bottom-8 left-8 z-40 bg-white/80 backdrop-blur-md border border-border rounded-xl px-4 py-2 shadow-soft">
+        <p className="text-xs text-muted-foreground">
+          Developed by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
+        </p>
+      </div>
     </div>
   );
 };
