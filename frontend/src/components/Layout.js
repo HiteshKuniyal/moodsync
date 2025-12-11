@@ -8,45 +8,55 @@ const Layout = ({ children }) => {
   const audioRef = useRef(null);
   const location = useLocation();
 
-  // Create a simple zen tone using Web Audio API
+  // Create Om Mani Padme Hum chant using Web Audio API
   useEffect(() => {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioContext();
-    let oscillator = null;
-    let gainNode = null;
+    let oscillators = [];
+    let gainNodes = [];
 
-    const playZenTone = () => {
-      if (oscillator) return;
+    const playMantra = () => {
+      if (oscillators.length > 0) return;
 
-      // Create oscillator for ambient tone
-      oscillator = audioContext.createOscillator();
-      gainNode = audioContext.createGain();
+      // Create harmonious frequencies for meditative mantra sound
+      const frequencies = [136.1, 204.15, 272.2]; // Om frequencies in Hz
+      
+      frequencies.forEach((freq, index) => {
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
 
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(174.61, audioContext.currentTime); // F note (calming frequency)
-      gainNode.gain.setValueAtTime(volume * 0.1, audioContext.currentTime); // Very subtle
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+        gainNode.gain.setValueAtTime(volume * 0.05 * (1 - index * 0.3), audioContext.currentTime);
 
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
 
-      oscillator.start();
+        oscillator.start();
+        oscillators.push(oscillator);
+        gainNodes.push(gainNode);
+      });
     };
 
-    const stopZenTone = () => {
-      if (oscillator) {
-        oscillator.stop();
-        oscillator = null;
-        gainNode = null;
-      }
+    const stopMantra = () => {
+      oscillators.forEach(osc => {
+        try {
+          osc.stop();
+        } catch (e) {
+          // Already stopped
+        }
+      });
+      oscillators = [];
+      gainNodes = [];
     };
 
     if (isPlaying) {
-      playZenTone();
+      playMantra();
     } else {
-      stopZenTone();
+      stopMantra();
     }
 
-    return () => stopZenTone();
+    return () => stopMantra();
   }, [isPlaying, volume]);
 
   const togglePlay = () => {
@@ -54,31 +64,66 @@ const Layout = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{
+      backgroundImage: 'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070)',
+      backgroundSize: 'cover',
+      backgroundAttachment: 'fixed',
+      backgroundPosition: 'center'
+    }}>
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-md bg-white/60 border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="text-white text-xl font-fraunces font-semibold">M</span>
+      <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-white/70 border-b border-border shadow-sm">
+        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-4 group">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+              <span className="text-white text-2xl font-playfair font-bold">M</span>
             </div>
-            <span className="text-xl font-fraunces font-semibold text-primary tracking-tight">Mood Sync</span>
+            <div>
+              <span className="text-3xl font-playfair font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent tracking-tight">Mood Sync</span>
+              <p className="text-xs text-muted-foreground -mt-1">Syncing Emotions with Wellness</p>
+            </div>
           </Link>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             <Link
               to="/assessment"
               data-testid="nav-assessment-link"
-              className={`text-sm font-medium hover:text-primary transition-colors ${
+              className={`text-sm font-semibold hover:text-primary transition-colors ${
                 location.pathname === '/assessment' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
               Check In
             </Link>
             <Link
+              to="/coaches"
+              data-testid="nav-coaches-link"
+              className={`text-sm font-semibold hover:text-primary transition-colors ${
+                location.pathname === '/coaches' ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              Coaches
+            </Link>
+            <Link
+              to="/exercises"
+              data-testid="nav-exercises-link"
+              className={`text-sm font-semibold hover:text-primary transition-colors ${
+                location.pathname === '/exercises' ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              Exercises
+            </Link>
+            <Link
+              to="/resources"
+              data-testid="nav-resources-link"
+              className={`text-sm font-semibold hover:text-primary transition-colors ${
+                location.pathname === '/resources' ? 'text-primary' : 'text-muted-foreground'
+              }`}
+            >
+              Resources
+            </Link>
+            <Link
               to="/history"
               data-testid="nav-history-link"
-              className={`text-sm font-medium hover:text-primary transition-colors ${
+              className={`text-sm font-semibold hover:text-primary transition-colors ${
                 location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -89,19 +134,19 @@ const Layout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="pt-20">{children}</main>
+      <main className="pt-24">{children}</main>
 
-      {/* Music Player */}
+      {/* Music Player - Om Mani Padme Hum */}
       <div
         data-testid="music-player"
-        className={`fixed bottom-8 right-8 z-50 bg-white/80 backdrop-blur-md border border-white/50 rounded-full p-2 pr-6 shadow-float flex items-center gap-4 ${
+        className={`fixed bottom-8 right-8 z-50 bg-white/90 backdrop-blur-xl border border-primary/20 rounded-2xl p-3 pr-6 shadow-float flex items-center gap-4 ${
           isPlaying ? 'playing' : ''
         }`}
       >
         <button
           data-testid="music-player-toggle"
           onClick={togglePlay}
-          className="w-12 h-12 rounded-full bg-primary hover:bg-primary/90 flex items-center justify-center transition-all hover:scale-105"
+          className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/70 hover:from-primary/90 hover:to-primary/60 flex items-center justify-center transition-all hover:scale-105 shadow-lg"
         >
           {isPlaying ? (
             <Pause className="w-5 h-5 text-white" data-testid="pause-icon" />
@@ -110,7 +155,7 @@ const Layout = ({ children }) => {
           )}
         </button>
 
-        <div className="flex items-center gap-3 min-w-[120px]">
+        <div className="flex items-center gap-3 min-w-[140px]">
           <Volume2 className="w-4 h-4 text-primary" />
           <input
             type="range"
@@ -124,9 +169,12 @@ const Layout = ({ children }) => {
           />
         </div>
 
-        <span className="text-xs text-muted-foreground font-medium">
-          {isPlaying ? 'Zen Mode' : 'Paused'}
-        </span>
+        <div className="text-right">
+          <span className="text-xs font-semibold text-primary block">
+            {isPlaying ? 'Om Mani Padme Hum' : 'Paused'}
+          </span>
+          <span className="text-xs text-muted-foreground">Mantra Chant</span>
+        </div>
       </div>
     </div>
   );
