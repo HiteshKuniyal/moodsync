@@ -8,6 +8,7 @@ import History from './pages/History';
 import Coaches from './pages/Coaches';
 import Exercises from './pages/Exercises';
 import Resources from './pages/Resources';
+import LifestyleAssessment from './pages/LifestyleAssessment';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/coaches" element={<Coaches />} />
           <Route path="/exercises" element={<Exercises />} />
           <Route path="/resources" element={<Resources />} />
+          <Route path="/lifestyle-assessment" element={<LifestyleAssessment />} />
         </Routes>
       </Layout>
       <Toaster position="top-center" richColors />
