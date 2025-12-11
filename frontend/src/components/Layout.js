@@ -166,7 +166,7 @@ const Layout = ({ children }) => {
       </nav>
 
       {/* Main Content */}
-      <main className="pt-24">{children}</main>
+      <main className="pt-16 md:pt-24 pb-20">{children}</main>
 
       {/* Music Player - Simplified at top right */}
       <div className="fixed top-24 right-6 z-50 flex items-center gap-2" data-testid="music-player">
