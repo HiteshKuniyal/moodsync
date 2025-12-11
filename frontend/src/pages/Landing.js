@@ -92,15 +92,15 @@ const Landing = () => {
             {/* Feature 2 */}
             <div
               data-testid="feature-ai-guidance"
-              className="bg-white rounded-3xl p-8 shadow-soft border border-border hover:shadow-float transition-all duration-300 emotion-card"
+              className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-soft border border-border hover:shadow-float transition-all duration-300 emotion-card"
             >
-              <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center mb-6">
-                <Brain className="w-7 h-7 text-secondary" />
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-secondary/10 flex items-center justify-center mb-4 md:mb-6">
+                <Brain className="w-6 h-6 md:w-7 md:h-7 text-secondary" />
               </div>
-              <h3 className="text-xl font-fraunces font-semibold text-foreground mb-3">
+              <h3 className="text-lg md:text-xl font-fraunces font-semibold text-foreground mb-2 md:mb-3">
                 AI Wellness Guidance
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                 Receive personalized coping strategies and actionable wellness tips tailored to your current state
               </p>
             </div>
@@ -108,15 +108,15 @@ const Landing = () => {
             {/* Feature 3 */}
             <div
               data-testid="feature-analytics"
-              className="bg-white rounded-3xl p-8 shadow-soft border border-border hover:shadow-float transition-all duration-300 emotion-card"
+              className="bg-white rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-soft border border-border hover:shadow-float transition-all duration-300 emotion-card"
             >
-              <div className="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center mb-6">
-                <TrendingUp className="w-7 h-7 text-accent" />
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-accent/10 flex items-center justify-center mb-4 md:mb-6">
+                <TrendingUp className="w-6 h-6 md:w-7 md:h-7 text-accent" />
               </div>
-              <h3 className="text-xl font-fraunces font-semibold text-foreground mb-3">
+              <h3 className="text-lg md:text-xl font-fraunces font-semibold text-foreground mb-2 md:mb-3">
                 Track Your Progress
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
                 Visualize patterns, identify triggers, and celebrate improvements in your emotional wellness journey
               </p>
             </div>
