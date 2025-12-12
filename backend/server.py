@@ -265,6 +265,107 @@ async def get_lifestyle_history(limit: int = 10):
         logger.error(f"Error fetching lifestyle history: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Gratitude Journal Endpoints
+class GratitudeEntry(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    content: str
+    date: str
+
+@api_router.post("/gratitude/add", response_model=GratitudeEntry)
+async def add_gratitude_entry(entry: GratitudeEntry):
+    try:
+        doc = entry.model_dump()
+        await db.gratitude_entries.insert_one(doc)
+        return entry
+    except Exception as e:
+        logger.error(f"Error adding gratitude entry: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/gratitude/entries", response_model=List[GratitudeEntry])
+async def get_gratitude_entries(limit: int = 30):
+    try:
+        entries = await db.gratitude_entries.find({}, {"_id": 0}).sort("date", -1).limit(limit).to_list(limit)
+        return entries
+    except Exception as e:
+        logger.error(f"Error fetching gratitude entries: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/gratitude/delete/{entry_id}")
+async def delete_gratitude_entry(entry_id: str):
+    try:
+        result = await db.gratitude_entries.delete_one({"id": entry_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Entry not found")
+        return {"message": "Entry deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting gratitude entry: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Trigger Insights Endpoints
+@api_router.get("/mood/trigger-insights")
+async def get_trigger_insights():
+    try:
+        # Get all mood entries with triggers
+        entries = await db.mood_entries.find(
+            {"trigger": {"$exists": True, "$ne": ""}},
+            {"_id": 0, "trigger": 1, "emotion": 1}
+        ).to_list(None)
+        
+        # Aggregate common triggers
+        trigger_counts = {}
+        trigger_emotions = {}
+        
+        for entry in entries:
+            trigger = entry.get('trigger', '').lower().strip()
+            emotion = entry.get('emotion', '')
+            
+            if trigger:
+                trigger_counts[trigger] = trigger_counts.get(trigger, 0) + 1
+                if trigger not in trigger_emotions:
+                    trigger_emotions[trigger] = {}
+                trigger_emotions[trigger][emotion] = trigger_emotions[trigger].get(emotion, 0) + 1
+        
+        # Sort by frequency
+        common_triggers = sorted(
+            [{"trigger": k, "count": v, "emotions": trigger_emotions[k]} for k, v in trigger_counts.items()],
+            key=lambda x: x['count'],
+            reverse=True
+        )[:10]
+        
+        return {"common_triggers": common_triggers, "total_entries": len(entries)}
+    except Exception as e:
+        logger.error(f"Error fetching trigger insights: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/mood/trigger-heatmap")
+async def get_trigger_heatmap():
+    try:
+        # Get mood entries from last 90 days
+        entries = await db.mood_entries.find(
+            {"trigger": {"$exists": True, "$ne": ""}},
+            {"_id": 0, "trigger": 1, "emotion": 1, "timestamp": 1, "emotion_level": 1}
+        ).to_list(None)
+        
+        # Create heatmap data
+        heatmap_data = []
+        for entry in entries:
+            timestamp = entry.get('timestamp')
+            if isinstance(timestamp, str):
+                timestamp = datetime.fromisoformat(timestamp)
+            
+            heatmap_data.append({
+                "date": timestamp.strftime("%Y-%m-%d"),
+                "trigger": entry.get('trigger', '').lower()[:50],
+                "emotion": entry.get('emotion', ''),
+                "intensity": entry.get('emotion_level', 5)
+            })
+        
+        return {"heatmap_data": heatmap_data}
+    except Exception as e:
+        logger.error(f"Error fetching trigger heatmap: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
