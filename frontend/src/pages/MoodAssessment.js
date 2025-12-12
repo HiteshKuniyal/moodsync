@@ -68,7 +68,7 @@ const MoodAssessment = () => {
       toast.error('Please select an option');
       return;
     }
-    if (step < 6) setStep(step + 1);
+    if (step < 9) setStep(step + 1);
   };
 
   const prevStep = () => {
