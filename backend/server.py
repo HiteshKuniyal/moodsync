@@ -39,6 +39,9 @@ class MoodEntryCreate(BaseModel):
     energy_level: int
     focus_level: int
     overthinking: str
+    trigger: Optional[str] = None
+    pattern: Optional[str] = None
+    underlying_cause: Optional[str] = None
     additional_notes: Optional[str] = None
 
 class MoodEntry(BaseModel):
