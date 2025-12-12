@@ -265,6 +265,64 @@ async def get_lifestyle_history(limit: int = 10):
         logger.error(f"Error fetching lifestyle history: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.get("/lifestyle/weekly-report")
+async def get_weekly_wellness_report():
+    try:
+        # Get lifestyle assessments from last 7 days
+        assessments = await db.lifestyle_assessments.find({}, {"_id": 0}).sort("date", -1).limit(7).to_list(7)
+        
+        if not assessments:
+            return {"message": "No data available for report"}
+        
+        # Calculate averages
+        total = len(assessments)
+        avg_sleep = sum(a['sleep_quality'] for a in assessments) / total
+        avg_nutrition = sum(a['nutrition'] for a in assessments) / total
+        avg_social = sum(a['social_connection'] for a in assessments) / total
+        avg_purpose = sum(a['purpose_growth'] for a in assessments) / total
+        avg_stress = sum(a['stress_management'] for a in assessments) / total
+        overall_avg = sum(a['average_score'] for a in assessments) / total
+        
+        # Determine trends (compare first half vs second half)
+        mid = total // 2
+        if total >= 4:
+            first_half_avg = sum(a['average_score'] for a in assessments[mid:]) / len(assessments[mid:])
+            second_half_avg = sum(a['average_score'] for a in assessments[:mid]) / len(assessments[:mid])
+            trend = "improving" if second_half_avg > first_half_avg else "declining" if second_half_avg < first_half_avg else "stable"
+        else:
+            trend = "stable"
+        
+        report = {
+            "period": "Last 7 days",
+            "total_entries": total,
+            "overall_average": round(overall_avg, 1),
+            "trend": trend,
+            "pillars": {
+                "sleep_quality": round(avg_sleep, 1),
+                "nutrition": round(avg_nutrition, 1),
+                "social_connection": round(avg_social, 1),
+                "purpose_growth": round(avg_purpose, 1),
+                "stress_management": round(avg_stress, 1)
+            },
+            "strengths": [],
+            "areas_for_improvement": []
+        }
+        
+        # Identify strengths (>= 8)
+        for key, value in report["pillars"].items():
+            if value >= 8:
+                report["strengths"].append(key.replace("_", " ").title())
+        
+        # Identify areas for improvement (<= 5)
+        for key, value in report["pillars"].items():
+            if value <= 5:
+                report["areas_for_improvement"].append(key.replace("_", " ").title())
+        
+        return report
+    except Exception as e:
+        logger.error(f"Error generating weekly report: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Gratitude Journal Endpoints
 class GratitudeEntry(BaseModel):
     model_config = ConfigDict(extra="ignore")
