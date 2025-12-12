@@ -126,14 +126,20 @@ Keep responses warm, supportive, and under 200 words. Focus on immediate, practi
 - Energy level: {mood_data.energy_level}/10
 - Focus level: {mood_data.focus_level}/10
 - Overthinking: {mood_data.overthinking}
+{f'- Trigger: {mood_data.trigger}' if mood_data.trigger else ''}
+{f'- Pattern noticed: {mood_data.pattern}' if mood_data.pattern else ''}
+{f'- Underlying cause: {mood_data.underlying_cause}' if mood_data.underlying_cause else ''}
 {f'- Additional notes: {mood_data.additional_notes}' if mood_data.additional_notes else ''}
 
-Please provide personalized wellness guidance and coping strategies."""
+Please provide personalized wellness guidance and coping strategies. Address the trigger, pattern, and underlying cause if provided. Do not use ** for bold formatting - use plain text only."""
         
         user_message = UserMessage(text=user_prompt)
         
         # Send the message and get the response
         response = await chat.send_message(user_message)
+        
+        # Remove ** markdown formatting
+        response = response.replace('**', '')
         
         return response
     except Exception as e:
