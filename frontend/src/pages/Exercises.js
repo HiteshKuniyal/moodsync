@@ -293,17 +293,16 @@ const Exercises = () => {
                 </ul>
               </div>
 
-              <button
+              <a
+                href="https://www.youtube.com/watch?v=ClqPtWzozXs"
+                target="_blank"
+                rel="noopener noreferrer"
                 data-testid="start-pmr-btn"
-                onClick={() => {
-                  toast.success('Starting Progressive Muscle Relaxation...');
-                  // In production, this would start a guided audio/video session
-                }}
                 className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-accent text-white rounded-full hover:bg-accent/90 transition-all shadow-lg"
               >
                 <Play className="w-5 h-5" />
                 <span>Start Guided Session</span>
-              </button>
+              </a>
             </div>
           </div>
         </div>
