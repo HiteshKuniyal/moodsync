@@ -374,7 +374,7 @@ const MoodAssessment = () => {
               <span>Back</span>
             </button>
 
-            {step < 6 ? (
+            {step < 9 ? (
               <button
                 onClick={nextStep}
                 data-testid="next-step-btn"
