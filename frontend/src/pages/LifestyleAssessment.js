@@ -11,6 +11,7 @@ const LifestyleAssessment = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [weeklyReport, setWeeklyReport] = useState(null);
   const [scores, setScores] = useState({
     sleep_quality: 5,
     nutrition: 5,
