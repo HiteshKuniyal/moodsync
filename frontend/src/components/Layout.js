@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Play, Pause, Volume2 } from 'lucide-react';
+import { Volume2, VolumeX } from 'lucide-react';
 
 const Layout = ({ children }) => {
   const [isPlaying, setIsPlaying] = useState(false);
