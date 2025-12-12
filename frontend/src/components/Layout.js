@@ -168,29 +168,30 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <main className="pt-16 md:pt-24 pb-20">{children}</main>
 
-      {/* Music Player - Simplified at top right */}
-      <div className="fixed top-24 right-6 z-50 flex items-center gap-2" data-testid="music-player">
-        <button
-          data-testid="music-player-toggle"
-          onClick={togglePlay}
-          className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-xl border border-primary/20 hover:bg-primary/10 flex items-center justify-center transition-all hover:scale-110 shadow-lg"
-        >
-          {isPlaying ? (
-            <Pause className="w-5 h-5 text-primary" data-testid="pause-icon" />
-          ) : (
-            <Play className="w-5 h-5 text-primary ml-0.5" data-testid="play-icon" />
-          )}
-        </button>
-        <div className={`w-10 h-10 rounded-full bg-white/90 backdrop-blur-xl border border-primary/20 flex items-center justify-center shadow-lg ${isPlaying ? 'animate-pulse' : ''}`}>
-          <Volume2 className="w-5 h-5 text-primary" />
-        </div>
-      </div>
+      {/* Footer with Sound and Developer Credit */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md bg-white/70 border-t border-border py-3 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* Developer Credit */}
+          <div>
+            <p className="text-xs text-muted-foreground">
+              Developed by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
+            </p>
+          </div>
 
-      {/* Developer Credit - Mobile responsive */}
-      <div className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-40 bg-white/80 backdrop-blur-md border border-border rounded-xl px-3 py-1.5 md:px-4 md:py-2 shadow-soft">
-        <p className="text-xs text-muted-foreground">
-          Developed by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
-        </p>
+          {/* Sound Icon - Mute/Unmute */}
+          <button
+            data-testid="music-player-toggle"
+            onClick={togglePlay}
+            className="w-10 h-10 rounded-full bg-white hover:bg-primary/10 border border-primary/20 flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+            title={isPlaying ? 'Mute OM Chant' : 'Play OM Chant'}
+          >
+            {isPlaying ? (
+              <Volume2 className="w-5 h-5 text-primary" data-testid="volume-icon" />
+            ) : (
+              <VolumeX className="w-5 h-5 text-muted-foreground" data-testid="volume-x-icon" />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
