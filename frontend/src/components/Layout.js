@@ -115,11 +115,11 @@ const Layout = ({ children }) => {
             </div>
           </Link>
 
-          <div className="flex items-center gap-3 md:gap-8">
+          <div className="flex items-center gap-2 md:gap-8 overflow-x-auto">
             <Link
               to="/assessment"
               data-testid="nav-assessment-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
                 location.pathname === '/assessment' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -128,7 +128,7 @@ const Layout = ({ children }) => {
             <Link
               to="/coaches"
               data-testid="nav-coaches-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors hidden sm:block ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
                 location.pathname === '/coaches' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -137,7 +137,7 @@ const Layout = ({ children }) => {
             <Link
               to="/exercises"
               data-testid="nav-exercises-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors hidden md:block ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
                 location.pathname === '/exercises' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -146,7 +146,7 @@ const Layout = ({ children }) => {
             <Link
               to="/resources"
               data-testid="nav-resources-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors hidden md:block ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
                 location.pathname === '/resources' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
@@ -155,7 +155,7 @@ const Layout = ({ children }) => {
             <Link
               to="/history"
               data-testid="nav-history-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors ${
+              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
                 location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'
               }`}
             >
