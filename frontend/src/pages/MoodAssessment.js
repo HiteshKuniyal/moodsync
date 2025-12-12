@@ -218,7 +218,7 @@ const MoodAssessment = () => {
 
               <div className="space-y-6">
                 <div className="text-center">
-                  <div className="text-6xl font-fraunces font-bold text-accent mb-4">
+                  <div className="text-6xl font-playfair font-bold text-accent mb-4">
                     {formData.focus_level}
                   </div>
                   <p className="text-sm text-muted-foreground">
