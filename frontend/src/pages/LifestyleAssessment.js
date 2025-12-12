@@ -110,21 +110,88 @@ const LifestyleAssessment = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-[calc(100vh-96px)] py-12 px-6 flex items-center justify-center">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle2 className="w-10 h-10 text-green-600" />
+      <div className="min-h-[calc(100vh-96px)] py-12 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-10 h-10 text-green-600" />
+            </div>
+            <h2 className="text-3xl font-playfair font-bold text-foreground mb-4">
+              Assessment Complete!
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Your weekly lifestyle assessment has been saved. Keep tracking your progress!
+            </p>
+            <div className="text-6xl font-playfair font-bold text-primary mb-2">
+              {calculateAverage()}/10
+            </div>
+            <p className="text-sm text-muted-foreground">Overall Wellness Score</p>
           </div>
-          <h2 className="text-3xl font-playfair font-bold text-foreground mb-4">
-            Assessment Complete!
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Your weekly lifestyle assessment has been saved. Keep tracking your progress!
-          </p>
-          <div className="text-6xl font-playfair font-bold text-primary mb-2">
-            {calculateAverage()}/10
-          </div>
-          <p className="text-sm text-muted-foreground">Overall Wellness Score</p>
+
+          {/* Weekly Wellness Report */}
+          {weeklyReport && weeklyReport.total_entries > 0 && (
+            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-soft border border-border">
+              <h3 className="text-2xl font-playfair font-bold text-foreground mb-6">
+                Weekly Wellness Report
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-primary/10 rounded-2xl p-6">
+                  <p className="text-sm text-muted-foreground mb-2">Overall Average</p>
+                  <p className="text-4xl font-playfair font-bold text-primary">{weeklyReport.overall_average}/10</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Trend: <span className={`font-semibold ${weeklyReport.trend === 'improving' ? 'text-green-600' : weeklyReport.trend === 'declining' ? 'text-red-600' : 'text-gray-600'}`}>
+                      {weeklyReport.trend}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="bg-secondary/10 rounded-2xl p-6">
+                  <p className="text-sm text-muted-foreground mb-2">Assessment Period</p>
+                  <p className="text-2xl font-semibold text-foreground">{weeklyReport.period}</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {weeklyReport.total_entries} entries recorded
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-6">
+                <h4 className="font-semibold text-foreground">Pillar Scores</h4>
+                {Object.entries(weeklyReport.pillars).map(([key, value]) => (
+                  <div key={key} className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
+                    <span className="text-sm capitalize">{key.replace(/_/g, ' ')}</span>
+                    <span className={`text-lg font-bold ${getScoreColor(value)}`}>{value}/10</span>
+                  </div>
+                ))}
+              </div>
+
+              {weeklyReport.strengths.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="font-semibold text-green-600 mb-2">Strengths</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {weeklyReport.strengths.map((strength, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                        {strength}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {weeklyReport.areas_for_improvement.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-orange-600 mb-2">Areas for Improvement</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {weeklyReport.areas_for_improvement.map((area, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                        {area}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
