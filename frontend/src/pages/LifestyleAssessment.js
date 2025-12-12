@@ -68,9 +68,17 @@ const LifestyleAssessment = () => {
       setSubmitted(true);
       toast.success('Lifestyle assessment saved successfully!');
       
+      // Fetch weekly report
+      try {
+        const reportResponse = await axios.get(`${API}/lifestyle/weekly-report`);
+        setWeeklyReport(reportResponse.data);
+      } catch (err) {
+        console.error('Error fetching weekly report:', err);
+      }
+      
       setTimeout(() => {
         navigate('/history');
-      }, 2000);
+      }, 5000);
     } catch (error) {
       console.error('Error submitting assessment:', error);
       toast.error('Failed to save assessment. Please try again.');
