@@ -113,7 +113,20 @@ const Guidance = () => {
             </div>
 
             <div className="text-foreground/90 leading-relaxed whitespace-pre-line font-manrope">
-              {moodEntry.ai_guidance}
+              {moodEntry.ai_guidance.split(/(breathing|breathe|breath)/gi).map((part, index) => {
+                if (part.toLowerCase().match(/breath/)) {
+                  return (
+                    <a
+                      key={index}
+                      href="/wellness-activities#breathing"
+                      className="text-primary font-semibold underline hover:text-primary/80 transition-colors"
+                    >
+                      {part}
+                    </a>
+                  );
+                }
+                return part;
+              })}
             </div>
 
             <div className="mt-8 pt-6 border-t border-border">
