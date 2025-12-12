@@ -34,6 +34,9 @@ const MoodAssessment = () => {
     energy_level: 5,
     focus_level: 5,
     overthinking: '',
+    trigger: '',
+    pattern: '',
+    underlying_cause: '',
     additional_notes: '',
   });
 
