@@ -3,11 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Volume2, VolumeX, Menu, X, User } from 'lucide-react';
 
 const Layout = ({ children }) => {
-  const [isPlaying, setIsPlaying] = useState(true); // On by default
+  const [isPlaying, setIsPlaying] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [volume] = useState(0.4);
+  const [volume, setVolume] = useState(0.3);
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const audioRef = useRef(null);
 
   // Check if user is logged in
   useEffect(() => {
@@ -17,46 +18,61 @@ const Layout = ({ children }) => {
     }
   }, []);
 
-  // Create enhanced OM chant
+  // Auto-play peaceful music on first interaction
+  useEffect(() => {
+    const handleFirstClick = () => {
+      if (audioRef.current && !isPlaying) {
+        audioRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch(e => console.log('Auto-play prevented:', e));
+        document.removeEventListener('click', handleFirstClick);
+      }
+    };
+
+    document.addEventListener('click', handleFirstClick);
+    return () => document.removeEventListener('click', handleFirstClick);
+  }, [isPlaying]);
+
+  // Create peaceful ambient music with Web Audio API
   useEffect(() => {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioContext();
     let oscillators = [];
     let gainNodes = [];
 
-    const playOM = () => {
+    const playPeacefulMusic = () => {
       if (oscillators.length > 0) return;
 
-      // Enhanced OM with richer harmonics
-      const omFrequencies = [
-        { freq: 108, gain: 0.12 },     // Sacred frequency
-        { freq: 136.1, gain: 0.18 },   // Fundamental OM (Earth)
-        { freq: 216, gain: 0.10 },     // Octave
-        { freq: 272.2, gain: 0.08 },   // 2nd harmonic
-        { freq: 324, gain: 0.05 },     // Triple
-        { freq: 432, gain: 0.04 }      // Universal frequency
+      // Peaceful frequencies creating a calm soundscape
+      const peacefulFreqs = [
+        { freq: 174, gain: 0.08, delay: 0 },      // Pain relief frequency
+        { freq: 285, gain: 0.06, delay: 0.5 },    // Healing frequency
+        { freq: 396, gain: 0.05, delay: 1 },      // Liberating guilt/fear
+        { freq: 528, gain: 0.07, delay: 1.5 },    // DNA repair/love frequency
+        { freq: 639, gain: 0.04, delay: 2 },      // Relationships
+        { freq: 741, gain: 0.03, delay: 2.5 },    // Awakening intuition
       ];
 
-      omFrequencies.forEach((note) => {
+      peacefulFreqs.forEach((note) => {
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
 
         osc.type = 'sine';
         osc.frequency.setValueAtTime(note.freq, audioContext.currentTime);
         
-        gain.gain.setValueAtTime(0, audioContext.currentTime);
-        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + 5);
+        gain.gain.setValueAtTime(0, audioContext.currentTime + note.delay);
+        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + note.delay + 6);
 
         osc.connect(gain);
         gain.connect(audioContext.destination);
-        osc.start();
+        osc.start(audioContext.currentTime + note.delay);
         
         oscillators.push(osc);
         gainNodes.push(gain);
       });
     };
 
-    const stopOM = () => {
+    const stopMusic = () => {
       oscillators.forEach(osc => {
         try { osc.stop(); } catch (e) {}
       });
@@ -65,12 +81,12 @@ const Layout = ({ children }) => {
     };
 
     if (isPlaying) {
-      playOM();
+      playPeacefulMusic();
     } else {
-      stopOM();
+      stopMusic();
     }
 
-    return () => stopOM();
+    return () => stopMusic();
   }, [isPlaying, volume]);
 
   const toggleSound = () => {
