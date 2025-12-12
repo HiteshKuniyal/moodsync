@@ -91,6 +91,14 @@ const LifestyleAssessment = () => {
     return 'text-red-600';
   };
 
+  const getScoreLabel = (score) => {
+    if (score >= 9) return 'Excellent';
+    if (score >= 7) return 'Good';
+    if (score >= 5) return 'Fair';
+    if (score >= 3) return 'Needs Improvement';
+    return 'Poor';
+  };
+
   if (submitted) {
     return (
       <div className="min-h-[calc(100vh-96px)] py-12 px-6 flex items-center justify-center">
