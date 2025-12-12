@@ -172,7 +172,7 @@ const MoodAssessment = () => {
           {step === 3 && (
             <div className="space-y-8" data-testid="step-energy-level">
               <div>
-                <h2 className="text-3xl font-fraunces font-semibold text-foreground mb-3">
+                <h2 className="text-3xl font-playfair font-semibold text-foreground mb-3">
                   How energized do you feel?
                 </h2>
                 <p className="text-muted-foreground">Rate your current energy level</p>
