@@ -101,7 +101,7 @@ const Coaches = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="schedule-hitesh-btn"
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-white rounded-full hover:bg-secondary/90 transition-all shadow-lg"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-secondary text-white rounded-full hover:bg-secondary/90 transition-all shadow-lg hover:scale-105"
               >
                 <Calendar className="w-4 h-4" />
                 <span>Schedule Session</span>
@@ -111,7 +111,7 @@ const Coaches = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-testid="message-hitesh-btn"
-                className="flex items-center justify-center gap-2 px-6 py-3 bg-white border border-secondary/30 text-secondary rounded-full hover:bg-secondary/5 transition-all"
+                className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 text-white rounded-full hover:from-purple-700 hover:via-pink-700 hover:to-orange-600 transition-all shadow-lg hover:scale-105"
               >
                 <MessageCircle className="w-5 h-5" />
                 <span>Instagram</span>
