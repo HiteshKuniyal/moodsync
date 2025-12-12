@@ -89,8 +89,8 @@ const Exercises = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 data-testid="exercises-title" className="text-5xl md:text-6xl font-playfair font-bold text-foreground mb-4">
-            Wellness Exercises
+          <h1 data-testid="wellness-activities-title" className="text-5xl md:text-6xl font-playfair font-bold text-foreground mb-4">
+            Wellness Activities
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Guided practices to calm your mind, relax your body, and restore balance
