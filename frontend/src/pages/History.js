@@ -242,9 +242,37 @@ const History = () => {
               </ResponsiveContainer>
             </div>
 
+            {/* Trigger Insights */}
+            {triggerInsights.common_triggers.length > 0 && (
+              <div data-testid="trigger-insights" className="bg-white rounded-3xl p-8 shadow-soft border border-border mb-8">
+                <h2 className="text-2xl font-playfair font-semibold text-foreground mb-6">Common Trigger Insights</h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Based on {triggerInsights.total_entries} mood entries with identified triggers
+                </p>
+                
+                <div className="space-y-4">
+                  {triggerInsights.common_triggers.slice(0, 5).map((trigger, index) => (
+                    <div key={index} className="p-4 rounded-xl bg-muted/30 border border-border">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-foreground capitalize">{trigger.trigger}</span>
+                        <span className="text-sm font-medium text-primary">{trigger.count} times</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {Object.entries(trigger.emotions).map(([emotion, count]) => (
+                          <span key={emotion} className="px-3 py-1 rounded-full bg-primary/10 text-xs font-medium text-primary">
+                            {emotion} ({count})
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Recent Entries */}
             <div data-testid="recent-entries" className="bg-white rounded-3xl p-8 shadow-soft border border-border">
-              <h2 className="text-2xl font-fraunces font-semibold text-foreground mb-6">Recent Check-Ins</h2>
+              <h2 className="text-2xl font-playfair font-semibold text-foreground mb-6">Recent Check-Ins</h2>
 
               <div className="space-y-4">
                 {moodHistory.map((entry) => {
