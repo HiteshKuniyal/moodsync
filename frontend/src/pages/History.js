@@ -281,6 +281,52 @@ const History = () => {
               </div>
             )}
 
+            {/* Trigger Heatmap */}
+            {triggerHeatmap.heatmap_data.length > 0 && (
+              <div data-testid="trigger-heatmap" className="bg-white rounded-3xl p-8 shadow-soft border border-border mb-8">
+                <h2 className="text-2xl font-playfair font-semibold text-foreground mb-6">Trigger Intensity Heatmap</h2>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Visual representation of trigger intensity over time
+                </p>
+                
+                <div className="grid grid-cols-7 gap-2">
+                  {triggerHeatmap.heatmap_data.slice(0, 49).map((data, index) => {
+                    const intensityColor = data.intensity >= 8 ? 'bg-red-500' : 
+                                          data.intensity >= 6 ? 'bg-orange-400' :
+                                          data.intensity >= 4 ? 'bg-yellow-400' : 'bg-green-400';
+                    return (
+                      <div
+                        key={index}
+                        className={`h-16 rounded-lg ${intensityColor} flex items-center justify-center text-xs text-white font-medium p-2 text-center hover:scale-105 transition-transform cursor-pointer`}
+                        title={`${data.date}: ${data.trigger} - ${data.emotion} (${data.intensity}/10)`}
+                      >
+                        {data.intensity}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center justify-center gap-4 mt-6 text-xs">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-green-400"></div>
+                    <span>Low (1-3)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-yellow-400"></div>
+                    <span>Medium (4-5)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-orange-400"></div>
+                    <span>High (6-7)</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded bg-red-500"></div>
+                    <span>Very High (8-10)</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Recent Entries */}
             <div data-testid="recent-entries" className="bg-white rounded-3xl p-8 shadow-soft border border-border">
               <h2 className="text-2xl font-playfair font-semibold text-foreground mb-6">Recent Check-Ins</h2>
