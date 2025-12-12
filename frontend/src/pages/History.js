@@ -19,10 +19,21 @@ const History = () => {
     avgFocus: 0,
     totalEntries: 0,
   });
+  const [triggerInsights, setTriggerInsights] = useState({ common_triggers: [], total_entries: 0 });
 
   useEffect(() => {
     fetchMoodData();
+    fetchTriggerInsights();
   }, []);
+
+  const fetchTriggerInsights = async () => {
+    try {
+      const response = await axios.get(`${API}/mood/trigger-insights`);
+      setTriggerInsights(response.data);
+    } catch (error) {
+      console.error('Error fetching trigger insights:', error);
+    }
+  };
 
   const fetchMoodData = async () => {
     try {
