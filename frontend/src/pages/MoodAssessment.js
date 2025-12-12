@@ -252,7 +252,7 @@ const MoodAssessment = () => {
           {step === 5 && (
             <div className="space-y-8" data-testid="step-overthinking">
               <div>
-                <h2 className="text-3xl font-fraunces font-semibold text-foreground mb-3">
+                <h2 className="text-3xl font-playfair font-semibold text-foreground mb-3">
                   Have you been overthinking?
                 </h2>
                 <p className="text-muted-foreground">How much are racing thoughts affecting you?</p>
