@@ -82,14 +82,14 @@ const MoodAssessment = () => {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-muted-foreground">
-              Step {step} of 6
+              Step {step} of 9
             </span>
-            <span className="text-sm font-medium text-primary">{Math.round((step / 6) * 100)}%</span>
+            <span className="text-sm font-medium text-primary">{Math.round((step / 9) * 100)}%</span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div
               className="h-full bg-primary transition-all duration-500 ease-out"
-              style={{ width: `${(step / 6) * 100}%` }}
+              style={{ width: `${(step / 9) * 100}%` }}
             />
           </div>
         </div>
