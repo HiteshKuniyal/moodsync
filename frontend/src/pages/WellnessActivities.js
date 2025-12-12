@@ -59,6 +59,32 @@ const WellnessActivities = () => {
     }
   }, [isRunning]);
 
+  // Meditation timer countdown
+  useEffect(() => {
+    if (isMeditationRunning && meditationTimeLeft > 0) {
+      meditationIntervalRef.current = setInterval(() => {
+        setMeditationTimeLeft((prev) => {
+          if (prev <= 1) {
+            setIsMeditationRunning(false);
+            toast.success('Meditation complete! Well done.');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      if (meditationIntervalRef.current) {
+        clearInterval(meditationIntervalRef.current);
+      }
+    }
+
+    return () => {
+      if (meditationIntervalRef.current) {
+        clearInterval(meditationIntervalRef.current);
+      }
+    };
+  }, [isMeditationRunning, meditationTimeLeft]);
+
   // Meditation timer effect
   useEffect(() => {
     if (isMeditationRunning && meditationTimeLeft > 0) {
