@@ -278,11 +278,74 @@ const MoodAssessment = () => {
             </div>
           )}
 
-          {/* Step 6: Additional Notes */}
+          {/* Step 6: Trigger Identification */}
           {step === 6 && (
+            <div className="space-y-8" data-testid="step-trigger">
+              <div>
+                <h2 className="text-3xl font-playfair font-semibold text-foreground mb-3">
+                  What triggered this emotion?
+                </h2>
+                <p className="text-muted-foreground">Identify the specific event, thought, or situation that sparked this feeling</p>
+              </div>
+
+              <textarea
+                value={formData.trigger}
+                onChange={(e) => setFormData({ ...formData, trigger: e.target.value })}
+                data-testid="trigger-textarea"
+                placeholder="For example: A conversation, work deadline, memory, physical sensation..."
+                rows={5}
+                className="w-full p-4 rounded-2xl border border-border bg-muted/30 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+              />
+            </div>
+          )}
+
+          {/* Step 7: Pattern Recognition */}
+          {step === 7 && (
+            <div className="space-y-8" data-testid="step-pattern">
+              <div>
+                <h2 className="text-3xl font-playfair font-semibold text-foreground mb-3">
+                  Do you notice any patterns?
+                </h2>
+                <p className="text-muted-foreground">Have you felt this way before? When does it typically happen?</p>
+              </div>
+
+              <textarea
+                value={formData.pattern}
+                onChange={(e) => setFormData({ ...formData, pattern: e.target.value })}
+                data-testid="pattern-textarea"
+                placeholder="For example: This happens every Monday, When I'm alone, After social events, During certain times of day..."
+                rows={5}
+                className="w-full p-4 rounded-2xl border border-border bg-muted/30 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+              />
+            </div>
+          )}
+
+          {/* Step 8: Underlying Cause */}
+          {step === 8 && (
+            <div className="space-y-8" data-testid="step-underlying-cause">
+              <div>
+                <h2 className="text-3xl font-playfair font-semibold text-foreground mb-3">
+                  What might be the deeper cause?
+                </h2>
+                <p className="text-muted-foreground">Beyond the immediate trigger, what underlying need, fear, or belief might be at play?</p>
+              </div>
+
+              <textarea
+                value={formData.underlying_cause}
+                onChange={(e) => setFormData({ ...formData, underlying_cause: e.target.value })}
+                data-testid="underlying-cause-textarea"
+                placeholder="For example: Fear of failure, need for approval, past trauma, unmet expectations, core belief about myself..."
+                rows={5}
+                className="w-full p-4 rounded-2xl border border-border bg-muted/30 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all resize-none"
+              />
+            </div>
+          )}
+
+          {/* Step 9: Additional Notes */}
+          {step === 9 && (
             <div className="space-y-8" data-testid="step-additional-notes">
               <div>
-                <h2 className="text-3xl font-fraunces font-semibold text-foreground mb-3">
+                <h2 className="text-3xl font-playfair font-semibold text-foreground mb-3">
                   Anything else you'd like to share?
                 </h2>
                 <p className="text-muted-foreground">Optional - Add any additional context about how you're feeling</p>
