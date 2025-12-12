@@ -440,4 +440,4 @@ const WellnessActivities = () => {
   );
 };
 
-export default Exercises;
+export default WellnessActivities;
