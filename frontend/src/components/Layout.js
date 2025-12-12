@@ -1,85 +1,67 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Menu, X, User } from 'lucide-react';
 
 const Layout = ({ children }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.3);
-  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true); // On by default
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [volume] = useState(0.4);
   const location = useLocation();
+  const [user, setUser] = useState(null);
 
-  // Create OM chant with deep meditative resonance
+  // Check if user is logged in
+  useEffect(() => {
+    const storedUser = localStorage.getItem('moodSyncUser');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Create enhanced OM chant
   useEffect(() => {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioContext = new AudioContext();
     let oscillators = [];
     let gainNodes = [];
-    let lfoOscillators = [];
 
     const playOM = () => {
       if (oscillators.length > 0) return;
 
-      // OM fundamental frequency (136.1 Hz - Earth tone) with harmonics
+      // Enhanced OM with richer harmonics
       const omFrequencies = [
-        { freq: 136.1, gain: 0.15 },   // Fundamental OM
-        { freq: 272.2, gain: 0.08 },   // 2nd harmonic (octave)
-        { freq: 408.3, gain: 0.04 },   // 3rd harmonic
-        { freq: 204.15, gain: 0.06 }   // Sub harmonic for depth
+        { freq: 108, gain: 0.12 },     // Sacred frequency
+        { freq: 136.1, gain: 0.18 },   // Fundamental OM (Earth)
+        { freq: 216, gain: 0.10 },     // Octave
+        { freq: 272.2, gain: 0.08 },   // 2nd harmonic
+        { freq: 324, gain: 0.05 },     // Triple
+        { freq: 432, gain: 0.04 }      // Universal frequency
       ];
 
-      omFrequencies.forEach((note, index) => {
-        // Main OM tone
+      omFrequencies.forEach((note) => {
         const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
-        const lfo = audioContext.createOscillator();
-        const lfoGain = audioContext.createGain();
 
         osc.type = 'sine';
         osc.frequency.setValueAtTime(note.freq, audioContext.currentTime);
         
-        // Add very subtle vibrato for natural resonance
-        lfo.type = 'sine';
-        lfo.frequency.setValueAtTime(0.3, audioContext.currentTime);
-        lfoGain.gain.setValueAtTime(0.3, audioContext.currentTime);
-        
-        lfo.connect(lfoGain);
-        lfoGain.connect(osc.frequency);
-        
         gain.gain.setValueAtTime(0, audioContext.currentTime);
-        
-        // Very slow fade in for deep meditative quality
-        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + 4);
+        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + 5);
 
         osc.connect(gain);
         gain.connect(audioContext.destination);
-
         osc.start();
-        lfo.start();
         
         oscillators.push(osc);
         gainNodes.push(gain);
-        lfoOscillators.push(lfo);
       });
     };
 
     const stopOM = () => {
       oscillators.forEach(osc => {
-        try {
-          osc.stop();
-        } catch (e) {
-          // Already stopped
-        }
-      });
-      lfoOscillators.forEach(lfo => {
-        try {
-          lfo.stop();
-        } catch (e) {
-          // Already stopped
-        }
+        try { osc.stop(); } catch (e) {}
       });
       oscillators = [];
       gainNodes = [];
-      lfoOscillators = [];
     };
 
     if (isPlaying) {
@@ -91,8 +73,12 @@ const Layout = ({ children }) => {
     return () => stopOM();
   }, [isPlaying, volume]);
 
-  const togglePlay = () => {
+  const toggleSound = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -105,6 +91,7 @@ const Layout = ({ children }) => {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur-xl bg-white/70 border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-5 flex items-center justify-between">
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 md:gap-4 group">
             <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
               <span className="text-white text-lg md:text-2xl font-playfair font-bold">M</span>
@@ -115,82 +102,87 @@ const Layout = ({ children }) => {
             </div>
           </Link>
 
-          <div className="flex items-center gap-2 md:gap-8 overflow-x-auto">
-            <Link
-              to="/assessment"
-              data-testid="nav-assessment-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
-                location.pathname === '/assessment' ? 'text-primary' : 'text-muted-foreground'
-              }`}
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            <Link to="/assessment" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/assessment' ? 'text-primary' : 'text-muted-foreground'}`}>Check In</Link>
+            <Link to="/coaches" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/coaches' ? 'text-primary' : 'text-muted-foreground'}`}>Coaches</Link>
+            <Link to="/wellness-activities" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/wellness-activities' ? 'text-primary' : 'text-muted-foreground'}`}>Activities</Link>
+            <Link to="/gratitude" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/gratitude' ? 'text-primary' : 'text-muted-foreground'}`}>Gratitude</Link>
+            <Link to="/resources" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/resources' ? 'text-primary' : 'text-muted-foreground'}`}>Resources</Link>
+            <Link to="/history" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'}`}>Journey</Link>
+          </div>
+
+          {/* Right side - Sound + User + Hamburger */}
+          <div className="flex items-center gap-3">
+            {/* Sound Icon */}
+            <button
+              onClick={toggleSound}
+              className="w-9 h-9 rounded-full bg-white hover:bg-primary/10 border border-primary/20 flex items-center justify-center transition-all hover:scale-110 shadow-sm"
+              title={isPlaying ? 'Mute OM' : 'Play OM'}
+              data-testid="sound-toggle"
             >
-              Check In
-            </Link>
-            <Link
-              to="/coaches"
-              data-testid="nav-coaches-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
-                location.pathname === '/coaches' ? 'text-primary' : 'text-muted-foreground'
-              }`}
+              {isPlaying ? (
+                <Volume2 className="w-4 h-4 text-primary" />
+              ) : (
+                <VolumeX className="w-4 h-4 text-muted-foreground" />
+              )}
+            </button>
+
+            {/* User Icon / Login */}
+            {user ? (
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                <User className="w-4 h-4 text-primary" />
+                <span className="text-xs font-medium text-primary">{user.name || user.phone}</span>
+              </div>
+            ) : (
+              <Link to="/login" className="hidden md:block text-xs font-semibold text-primary hover:underline">Login</Link>
+            )}
+
+            {/* Hamburger Menu */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden w-9 h-9 rounded-lg bg-white border border-border flex items-center justify-center hover:bg-muted/50 transition-all"
+              data-testid="hamburger-menu"
             >
-              Coaches
-            </Link>
-            <Link
-              to="/exercises"
-              data-testid="nav-exercises-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
-                location.pathname === '/exercises' ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              Exercises
-            </Link>
-            <Link
-              to="/resources"
-              data-testid="nav-resources-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
-                location.pathname === '/resources' ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              Resources
-            </Link>
-            <Link
-              to="/history"
-              data-testid="nav-history-link"
-              className={`text-xs md:text-sm font-semibold hover:text-primary transition-colors whitespace-nowrap ${
-                location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'
-              }`}
-            >
-              Journey
-            </Link>
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-border bg-white/95 backdrop-blur-xl">
+            <div className="px-4 py-4 space-y-3">
+              <Link to="/assessment" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Check In</Link>
+              <Link to="/coaches" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Coaches</Link>
+              <Link to="/wellness-activities" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Wellness Activities</Link>
+              <Link to="/gratitude" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Gratitude Journal</Link>
+              <Link to="/resources" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Resources</Link>
+              <Link to="/history" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">My Journey</Link>
+              <div className="pt-3 border-t border-border">
+                {user ? (
+                  <div className="flex items-center gap-2 py-2">
+                    <User className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-primary">{user.name || user.phone}</span>
+                  </div>
+                ) : (
+                  <Link to="/login" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-primary">Login / Sign Up</Link>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Main Content */}
       <main className="pt-16 md:pt-24 pb-20">{children}</main>
 
-      {/* Footer with Sound and Developer Credit */}
+      {/* Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md bg-white/70 border-t border-border py-3 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Developer Credit */}
-          <div>
-            <p className="text-xs text-muted-foreground">
-              Developed by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
-            </p>
-          </div>
-
-          {/* Sound Icon - Mute/Unmute */}
-          <button
-            data-testid="music-player-toggle"
-            onClick={togglePlay}
-            className="w-10 h-10 rounded-full bg-white hover:bg-primary/10 border border-primary/20 flex items-center justify-center transition-all hover:scale-110 shadow-lg"
-            title={isPlaying ? 'Mute OM Chant' : 'Play OM Chant'}
-          >
-            {isPlaying ? (
-              <Volume2 className="w-5 h-5 text-primary" data-testid="volume-icon" />
-            ) : (
-              <VolumeX className="w-5 h-5 text-muted-foreground" data-testid="volume-x-icon" />
-            )}
-          </button>
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-xs text-muted-foreground">
+            Developed by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
+          </p>
         </div>
       </div>
     </div>
