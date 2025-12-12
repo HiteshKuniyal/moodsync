@@ -53,6 +53,9 @@ class MoodEntry(BaseModel):
     energy_level: int
     focus_level: int
     overthinking: str
+    trigger: Optional[str] = None
+    pattern: Optional[str] = None
+    underlying_cause: Optional[str] = None
     additional_notes: Optional[str] = None
     ai_guidance: str
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
