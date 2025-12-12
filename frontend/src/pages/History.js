@@ -20,10 +20,12 @@ const History = () => {
     totalEntries: 0,
   });
   const [triggerInsights, setTriggerInsights] = useState({ common_triggers: [], total_entries: 0 });
+  const [triggerHeatmap, setTriggerHeatmap] = useState({ heatmap_data: [] });
 
   useEffect(() => {
     fetchMoodData();
     fetchTriggerInsights();
+    fetchTriggerHeatmap();
   }, []);
 
   const fetchTriggerInsights = async () => {
@@ -32,6 +34,15 @@ const History = () => {
       setTriggerInsights(response.data);
     } catch (error) {
       console.error('Error fetching trigger insights:', error);
+    }
+  };
+
+  const fetchTriggerHeatmap = async () => {
+    try {
+      const response = await axios.get(`${API}/mood/trigger-heatmap`);
+      setTriggerHeatmap(response.data);
+    } catch (error) {
+      console.error('Error fetching trigger heatmap:', error);
     }
   };
 
