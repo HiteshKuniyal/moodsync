@@ -178,6 +178,9 @@ const LifestyleAssessment = () => {
                       {scores[pillar.key]}
                     </div>
                     <div className="text-xs text-muted-foreground">/ 10</div>
+                    <div className={`text-xs font-semibold mt-1 ${getScoreColor(scores[pillar.key])}`}>
+                      {getScoreLabel(scores[pillar.key])}
+                    </div>
                   </div>
                 </div>
 
