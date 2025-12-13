@@ -48,6 +48,7 @@ class MoodEntry(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: Optional[str] = None
     emotion: str
     emotion_level: int
     energy_level: int
@@ -80,6 +81,7 @@ class LifestyleAssessment(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: Optional[str] = None
     sleep_quality: int
     nutrition: int
     social_connection: int
@@ -355,6 +357,7 @@ async def get_weekly_wellness_report():
 class GratitudeEntry(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: Optional[str] = None
     content: str
     date: str
 
