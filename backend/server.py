@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Request
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -24,6 +24,11 @@ app = FastAPI()
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
+
+# Helper function to get user_id from headers
+def get_user_id_from_header(request) -> Optional[str]:
+    """Extract user_id from X-User-Id header"""
+    return request.headers.get('X-User-Id')
 
 # Configure logging
 logging.basicConfig(
