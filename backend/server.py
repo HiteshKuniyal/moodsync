@@ -470,7 +470,7 @@ class User(BaseModel):
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     username: str
-    name: str
+    name: Optional[str] = None
     password_hash: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
