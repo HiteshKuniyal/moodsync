@@ -217,7 +217,7 @@ async def get_mood_trends(request: Request, days: int = 14):
         
         # Get mood entries for trend analysis
         mood_entries = await db.mood_entries.find(
-            {},
+            query,
             {"_id": 0, "timestamp": 1, "emotion": 1, "emotion_level": 1, "energy_level": 1, "focus_level": 1}
         ).sort("timestamp", -1).limit(days * 5).to_list(days * 5)
         
@@ -418,11 +418,16 @@ async def delete_gratitude_entry(entry_id: str):
 
 # Trigger Insights Endpoints
 @api_router.get("/mood/trigger-insights")
-async def get_trigger_insights():
+async def get_trigger_insights(request: Request):
     try:
+        user_id = get_user_id_from_header(request)
+        query = {"trigger": {"$exists": True, "$ne": ""}}
+        if user_id:
+            query["user_id"] = user_id
+        
         # Get all mood entries with triggers
         entries = await db.mood_entries.find(
-            {"trigger": {"$exists": True, "$ne": ""}},
+            query,
             {"_id": 0, "trigger": 1, "emotion": 1}
         ).to_list(None)
         
@@ -453,11 +458,16 @@ async def get_trigger_insights():
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/mood/trigger-heatmap")
-async def get_trigger_heatmap():
+async def get_trigger_heatmap(request: Request):
     try:
+        user_id = get_user_id_from_header(request)
+        query = {"trigger": {"$exists": True, "$ne": ""}}
+        if user_id:
+            query["user_id"] = user_id
+        
         # Get mood entries from last 90 days
         entries = await db.mood_entries.find(
-            {"trigger": {"$exists": True, "$ne": ""}},
+            query,
             {"_id": 0, "trigger": 1, "emotion": 1, "timestamp": 1, "emotion_level": 1}
         ).to_list(None)
         
