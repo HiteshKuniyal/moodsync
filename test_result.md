@@ -165,6 +165,18 @@ frontend:
         agent: "testing"
         comment: "✅ PASSED - Lifestyle assessment form working perfectly, all 5 pillars can be scored (sleep_quality: 8, nutrition: 7, social_connection: 6, purpose_growth: 9, stress_management: 5), overall score calculated correctly (7.0/10), wellness report generated with current week average, historical trends visible, pillar scores displayed, areas for improvement identified. Complete functionality working with historical data."
 
+  - task: "User-Specific Data and Privacy Features"
+    implemented: true
+    working: false
+    file: "/app/frontend/src/utils/api.js"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "🚨 CRITICAL PRIVACY ISSUE FOUND - Data isolation is broken. Guest users can see user-specific gratitude entries (showing '6 entries' to non-logged-in users). This is a major security/privacy concern. ✅ Working features: Account creation (testprivacy1919 created successfully), Gratitude journal CRUD operations, Privacy settings page loads correctly, Data persistence after re-login, Backend API integration (200 OK responses). ❌ Issues: 1) Data isolation failure - guest users see user data, 2) Minor navigation issue from coaches to lifestyle assessment. Backend logs show successful API calls: POST /api/auth/signup 200 OK, GET /api/gratitude/entries 200 OK, POST /api/gratitude/add 200 OK. URGENT FIX NEEDED: Implement proper user authentication checks in frontend API calls to prevent guest access to user-specific data."
+
 metadata:
   created_by: "testing_agent"
   version: "1.0"
