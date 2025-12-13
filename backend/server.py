@@ -171,6 +171,11 @@ async def submit_mood(mood_input: MoodEntryCreate, request: Request):
             user = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1})
             if user:
                 user_name = user.get("name")
+                logger.info(f"Generating guidance for user: {user_name} (id: {user_id})")
+            else:
+                logger.warning(f"User not found for id: {user_id}")
+        else:
+            logger.info("Generating guidance for guest user")
         
         # Generate AI guidance with user name
         ai_guidance = await generate_mood_guidance(mood_input, user_name)
