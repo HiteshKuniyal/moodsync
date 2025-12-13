@@ -54,11 +54,13 @@ const PrivacySettings = () => {
     }
 
     try {
-      // In a real implementation, you would call a delete endpoint
-      // await apiClient.delete('/user/account');
+      // Delete all user data from backend
+      await apiClient.delete('/user/data');
       
+      // Clear local storage
       localStorage.removeItem('moodSyncUser');
-      toast.success('Account data cleared. Redirecting...');
+      
+      toast.success('All account data deleted. Redirecting...');
       setTimeout(() => {
         window.location.href = '/';
       }, 2000);

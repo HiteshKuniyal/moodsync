@@ -601,6 +601,30 @@ async def login(credentials: UserLogin):
         logger.error(f"Error during login: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.delete("/user/data")
+async def delete_user_data(request: Request):
+    try:
+        user_id = get_user_id_from_header(request)
+        
+        if not user_id:
+            raise HTTPException(status_code=401, detail="User not authenticated")
+        
+        # Delete all user data from collections
+        await db.mood_entries.delete_many({"user_id": user_id})
+        await db.gratitude_entries.delete_many({"user_id": user_id})
+        await db.lifestyle_assessments.delete_many({"user_id": user_id})
+        
+        logger.info(f"Deleted all data for user: {user_id}")
+        
+        return {
+            "message": "All user data deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting user data: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
