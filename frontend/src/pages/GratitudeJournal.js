@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Heart, Plus, Calendar, Trash2, Edit2 } from 'lucide-react';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
+import GuestProtection from '../components/GuestProtection';
 
 const GratitudeJournal = () => {
   const [entries, setEntries] = useState([]);
   const [newEntry, setNewEntry] = useState('');
   const [loading, setLoading] = useState(false);
+  const user = JSON.parse(localStorage.getItem('moodSyncUser') || 'null');
 
   useEffect(() => {
-    fetchEntries();
+    if (user) {
+      fetchEntries();
+    }
   }, []);
 
   const fetchEntries = async () => {
@@ -81,6 +85,13 @@ const GratitudeJournal = () => {
             Cultivate positivity by acknowledging the good in your life. Studies show daily gratitude practice improves mental health and happiness.
           </p>
         </div>
+
+        {/* Guest Protection */}
+        {!user && (
+          <div className="mb-8">
+            <GuestProtection feature="Your Gratitude Journal" />
+          </div>
+        )}
 
         {/* New Entry Form */}
         <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-soft border border-border mb-8">
