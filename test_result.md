@@ -102,15 +102,27 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the Mood Sync application focusing on Wellness Activities Page, OTP Login Flow, Gratitude Journal, and Weekly Wellness Report with historical trends"
+user_problem_statement: "Test the new username/password authentication system for Mood Sync application with complete signup, login, duplicate username handling, and invalid login scenarios"
 
 frontend:
+  - task: "Username/Password Authentication System"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Login.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "New authentication system implemented - need to test complete signup flow, login flow, duplicate username handling, invalid login scenarios, and user session management"
+
   - task: "Wellness Activities Page"
     implemented: true
     working: true
     file: "/app/frontend/src/pages/WellnessActivities.js"
     stuck_count: 0
-    priority: "high"
+    priority: "medium"
     needs_retesting: false
     status_history:
       - working: "NA"
@@ -120,27 +132,12 @@ frontend:
         agent: "testing"
         comment: "✅ PASSED - Page loads successfully, breathing exercises card visible, 3-minute timer works correctly with pause/resume/reset functionality, PMR session button accessible. All core functionality working as expected."
 
-  - task: "OTP Login Flow"
-    implemented: true
-    working: true
-    file: "/app/frontend/src/pages/Login.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "testing"
-        comment: "Initial testing - need to verify email integration, demo mode OTP display, and OTP verification"
-      - working: true
-        agent: "testing"
-        comment: "✅ PASSED - Email integration working in demo mode (expected since Resend API key is placeholder), demo OTP displayed correctly (943848), OTP verification successful, login redirect working properly. Demo mode functioning as intended."
-
   - task: "Gratitude Journal"
     implemented: true
     working: true
     file: "/app/frontend/src/pages/GratitudeJournal.js"
     stuck_count: 0
-    priority: "high"
+    priority: "medium"
     needs_retesting: false
     status_history:
       - working: "NA"
@@ -155,7 +152,7 @@ frontend:
     working: true
     file: "/app/frontend/src/pages/LifestyleAssessment.js"
     stuck_count: 0
-    priority: "high"
+    priority: "medium"
     needs_retesting: false
     status_history:
       - working: "NA"
