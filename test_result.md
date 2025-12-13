@@ -203,9 +203,8 @@ metadata:
 
 test_plan:
   current_focus: 
-    - "User-Specific Data and Privacy Features"
-  stuck_tasks: 
-    - "User-Specific Data and Privacy Features"
+    - "Mobile Menu Features - User Logout and Attribution"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
