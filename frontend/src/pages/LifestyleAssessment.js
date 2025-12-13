@@ -101,6 +101,24 @@ const LifestyleAssessment = () => {
     return 'Poor';
   };
 
+  if (!user) {
+    return (
+      <div className="min-h-[calc(100vh-96px)] py-12 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-5xl font-playfair font-bold text-foreground mb-4">
+              Weekly Lifestyle Assessment
+            </h1>
+            <p className="text-muted-foreground mb-8">
+              Evaluate your wellness across 5 key pillars and track your progress over time
+            </p>
+          </div>
+          <GuestProtection feature="Weekly Lifestyle Assessment" />
+        </div>
+      </div>
+    );
+  }
+
   if (submitted) {
     return (
       <div className="min-h-[calc(100vh-96px)] py-12 px-6">
