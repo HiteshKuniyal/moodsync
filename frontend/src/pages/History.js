@@ -364,11 +364,13 @@ const History = () => {
                             <div>
                               <div className="font-semibold text-foreground">{entry.emotion}</div>
                               <div className="text-xs text-muted-foreground">
-                                {entryDate.toLocaleDateString('en-US', {
+                                {new Date(entry.timestamp).toLocaleString('en-US', {
                                   month: 'short',
                                   day: 'numeric',
+                                  year: 'numeric',
                                   hour: '2-digit',
                                   minute: '2-digit',
+                                  hour12: true
                                 })}
                               </div>
                             </div>
