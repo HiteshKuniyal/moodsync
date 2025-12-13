@@ -147,9 +147,27 @@ const Layout = ({ children }) => {
 
             {/* User Icon / Login */}
             {user ? (
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                <User className="w-4 h-4 text-primary" />
-                <span className="text-xs font-medium text-primary">{user.name || user.phone}</span>
+              <div className="hidden md:block relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/20 transition-all"
+                >
+                  <User className="w-4 h-4 text-primary" />
+                  <span className="text-xs font-medium text-primary">{user.name || user.phone}</span>
+                </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-40 bg-white rounded-lg shadow-lg border border-border py-2 z-50">
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem('moodSyncUser');
+                        window.location.reload();
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm text-red-500 hover:bg-red-50 transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link to="/login" className="hidden md:block text-xs font-semibold text-primary hover:underline">Login</Link>
