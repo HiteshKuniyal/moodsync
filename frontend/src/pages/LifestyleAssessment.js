@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
-import axios from 'axios';
 import { toast } from 'sonner';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import apiClient from '../utils/api';
 
 const LifestyleAssessment = () => {
   const navigate = useNavigate();
@@ -59,7 +56,7 @@ const LifestyleAssessment = () => {
     setLoading(true);
 
     try {
-      await axios.post(`${API}/lifestyle/assess`, {
+      await apiClient.post('/lifestyle/assess', {
         ...scores,
         notes,
         date: new Date().toISOString(),
@@ -70,7 +67,7 @@ const LifestyleAssessment = () => {
       
       // Fetch weekly report
       try {
-        const reportResponse = await axios.get(`${API}/lifestyle/weekly-report`);
+        const reportResponse = await apiClient.get('/lifestyle/weekly-report');
         setWeeklyReport(reportResponse.data);
       } catch (err) {
         console.error('Error fetching weekly report:', err);
