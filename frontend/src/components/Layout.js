@@ -243,21 +243,10 @@ const Layout = ({ children }) => {
 
       {/* Footer */}
       <div className="fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md bg-white/70 border-t border-border py-3 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <div className="max-w-7xl mx-auto text-center">
           <p className="text-xs text-muted-foreground">
             An initiative by <span className="font-semibold text-primary">Hitesh Kuniyal</span>
           </p>
-          {user && (
-            <button
-              onClick={() => {
-                localStorage.removeItem('moodSyncUser');
-                window.location.reload();
-              }}
-              className="text-xs text-red-500 hover:text-red-600 font-medium"
-            >
-              Logout
-            </button>
-          )}
         </div>
       </div>
     </div>
