@@ -159,14 +159,17 @@ async def root():
     return {"message": "Mood Sync API"}
 
 @api_router.post("/mood/submit", response_model=MoodEntry)
-async def submit_mood(mood_input: MoodEntryCreate):
+async def submit_mood(mood_input: MoodEntryCreate, request: Request):
     try:
+        user_id = get_user_id_from_header(request)
+        
         # Generate AI guidance
         ai_guidance = await generate_mood_guidance(mood_input)
         
         # Create mood entry with AI guidance
         mood_dict = mood_input.model_dump()
         mood_dict['ai_guidance'] = ai_guidance
+        mood_dict['user_id'] = user_id
         mood_obj = MoodEntry(**mood_dict)
         
         # Store in MongoDB
