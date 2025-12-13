@@ -51,6 +51,7 @@ const Layout = ({ children }) => {
             <Link to="/gratitude" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/gratitude' ? 'text-primary' : 'text-muted-foreground'}`}>Gratitude</Link>
             <Link to="/resources" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/resources' ? 'text-primary' : 'text-muted-foreground'}`}>Resources</Link>
             <Link to="/history" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'}`}>Journey</Link>
+            <Link to="/privacy" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/privacy' ? 'text-primary' : 'text-muted-foreground'}`}>Privacy</Link>
           </div>
 
           {/* Right side - User + Hamburger */}
@@ -105,6 +106,7 @@ const Layout = ({ children }) => {
               <Link to="/gratitude" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Gratitude Journal</Link>
               <Link to="/resources" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Resources</Link>
               <Link to="/history" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">My Journey</Link>
+              <Link to="/privacy" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Privacy & Data</Link>
               <div className="pt-3 border-t border-border">
                 {user ? (
                   <div className="flex items-center gap-2 py-2">
