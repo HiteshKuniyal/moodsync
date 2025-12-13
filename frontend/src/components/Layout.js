@@ -132,6 +132,12 @@ const Layout = ({ children }) => {
                   <Link to="/login" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-primary">Login / Sign Up</Link>
                 )}
               </div>
+              {/* Footer Attribution in Mobile Menu */}
+              <div className="pt-3 border-t border-border">
+                <p className="text-xs text-center text-muted-foreground">
+                  An initiative by Hitesh Kuniyal
+                </p>
+              </div>
             </div>
           </div>
         )}
