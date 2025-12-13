@@ -19,29 +19,7 @@ const Layout = ({ children }) => {
     }
   }, []);
 
-  // Auto-play river sound on mount
-  useEffect(() => {
-    const startAudio = () => {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const audioContext = new AudioContext();
-      
-      if (audioContext.state === 'suspended') {
-        audioContext.resume();
-      }
-      
-      // Start playing immediately
-      playRiverSound(audioContext);
-    };
-
-    // Try to start on mount
-    const timer = setTimeout(() => {
-      if (isPlaying) {
-        startAudio();
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
+  // Auto-play river sound on mount - removed separate effect, handled in main useEffect
 
   // Create river flowing sound with Web Audio API
   useEffect(() => {
