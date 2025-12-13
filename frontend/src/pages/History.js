@@ -4,9 +4,11 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { Calendar, TrendingUp, Brain, Zap, Eye, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
+import GuestProtection from '../components/GuestProtection';
 
 const History = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('moodSyncUser') || 'null');
   const [moodHistory, setMoodHistory] = useState([]);
   const [trendData, setTrendData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,9 +22,13 @@ const History = () => {
   const [triggerHeatmap, setTriggerHeatmap] = useState({ heatmap_data: [] });
 
   useEffect(() => {
-    fetchMoodData();
-    fetchTriggerInsights();
-    fetchTriggerHeatmap();
+    if (user) {
+      fetchMoodData();
+      fetchTriggerInsights();
+      fetchTriggerHeatmap();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const fetchTriggerInsights = async () => {
