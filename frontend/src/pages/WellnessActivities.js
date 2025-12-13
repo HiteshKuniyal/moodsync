@@ -404,21 +404,32 @@ const WellnessActivities = () => {
             ))}
           </div>
 
-          {isMeditationRunning && (
+          {selectedMeditationTimer && (
             <div className="mt-6 p-6 rounded-2xl bg-purple-100 border border-purple-200">
               <div className="text-center mb-4">
                 <div className="text-5xl font-playfair font-bold text-purple-600" data-testid="meditation-timer-display">
                   {Math.floor(meditationTimeLeft / 60)}:{(meditationTimeLeft % 60).toString().padStart(2, '0')}
                 </div>
-                <p className="text-sm text-muted-foreground mt-2">Breathe deeply and stay present</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {isMeditationRunning ? 'Breathe deeply and stay present' : 'Paused'}
+                </p>
               </div>
               <div className="flex justify-center gap-4">
-                <button
-                  onClick={() => setIsMeditationRunning(false)}
-                  className="px-6 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-all"
-                >
-                  Pause
-                </button>
+                {isMeditationRunning ? (
+                  <button
+                    onClick={() => setIsMeditationRunning(false)}
+                    className="px-6 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-all"
+                  >
+                    Pause
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsMeditationRunning(true)}
+                    className="px-6 py-2 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-all"
+                  >
+                    Resume
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setIsMeditationRunning(false);
