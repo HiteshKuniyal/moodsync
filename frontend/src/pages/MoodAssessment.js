@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'sonner';
 import { ChevronRight, ChevronLeft, Loader2 } from 'lucide-react';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import apiClient from '../utils/api';
 
 const emotions = [
   { value: 'Sad', emoji: '😢', color: 'from-blue-100 to-blue-50' },
@@ -48,7 +45,7 @@ const MoodAssessment = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/mood/submit`, formData);
+      const response = await apiClient.post('/mood/submit', formData);
       toast.success('Your mood entry has been recorded!');
       navigate('/guidance', { state: { moodEntry: response.data } });
     } catch (error) {
