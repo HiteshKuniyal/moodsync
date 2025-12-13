@@ -184,10 +184,12 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus: 
+    - "User-Specific Data and Privacy Features"
+  stuck_tasks: 
+    - "User-Specific Data and Privacy Features"
   test_all: false
-  test_priority: "completed"
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "testing"
