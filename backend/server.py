@@ -455,158 +455,100 @@ async def get_trigger_heatmap():
         raise HTTPException(status_code=500, detail=str(e))
 
 # Authentication Endpoints
-import random
-import string
+import bcrypt
 
-# In-memory OTP storage (in production, use Redis or database)
-otp_storage = {}
-
-# Load Resend API key
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY')
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
-
-if RESEND_API_KEY and RESEND_API_KEY != 're_placeholder_get_from_resend_com':
-    resend.api_key = RESEND_API_KEY
-
-class OTPRequest(BaseModel):
-    identifier: str  # email or phone
-    method: str  # 'email' or 'phone'
-
-class OTPVerify(BaseModel):
-    identifier: str
-    otp: str
+# User Models
+class UserSignup(BaseModel):
+    username: str
+    password: str
     name: str
 
-async def send_otp_email(email: str, otp: str):
-    """Send OTP via email using Resend"""
-    html_content = f"""
-    <html>
-        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; text-align: center;">
-                <h1 style="color: white; margin: 0;">Mood Sync</h1>
-                <p style="color: rgba(255,255,255,0.9); margin: 5px 0;">Syncing Emotions with Wellness</p>
-            </div>
-            <div style="padding: 30px; background: #f9f9f9; border-radius: 10px; margin-top: 20px;">
-                <h2 style="color: #333;">Your Login Code</h2>
-                <p style="color: #666; font-size: 16px;">Use this code to complete your login:</p>
-                <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;">
-                    <h1 style="color: #667eea; font-size: 36px; letter-spacing: 8px; margin: 0;">{otp}</h1>
-                </div>
-                <p style="color: #999; font-size: 14px;">This code expires in 5 minutes.</p>
-                <p style="color: #999; font-size: 14px;">If you didn't request this code, please ignore this email.</p>
-            </div>
-            <div style="text-align: center; margin-top: 20px; color: #999; font-size: 12px;">
-                <p>An initiative by Hitesh Kuniyal</p>
-            </div>
-        </body>
-    </html>
-    """
-    
-    params = {
-        "from": SENDER_EMAIL,
-        "to": [email],
-        "subject": "Your Mood Sync Login Code",
-        "html": html_content
-    }
-    
-    try:
-        # Run sync SDK in thread to keep FastAPI non-blocking
-        email_response = await asyncio.to_thread(resend.Emails.send, params)
-        return email_response
-    except Exception as e:
-        logger.error(f"Failed to send email via Resend: {str(e)}")
-        raise
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
-@api_router.post("/auth/send-otp")
-async def send_otp(request: OTPRequest):
+class User(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    username: str
+    name: str
+    password_hash: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+def hash_password(password: str) -> str:
+    """Hash a password using bcrypt"""
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+
+def verify_password(password: str, password_hash: str) -> bool:
+    """Verify a password against its hash"""
+    return bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8'))
+
+@api_router.post("/auth/signup")
+async def signup(user: UserSignup):
     try:
-        # Generate 6-digit OTP
-        otp = ''.join(random.choices(string.digits, k=6))
+        # Check if username already exists
+        existing_user = await db.users.find_one({"username": user.username}, {"_id": 0})
+        if existing_user:
+            raise HTTPException(status_code=400, detail="Username already exists")
         
-        # Store OTP (expires in 5 minutes)
-        otp_storage[request.identifier] = {
-            'otp': otp,
-            'timestamp': datetime.now(timezone.utc),
-            'method': request.method
+        # Hash the password
+        password_hash = hash_password(user.password)
+        
+        # Create user document
+        user_doc = {
+            "id": str(uuid.uuid4()),
+            "username": user.username,
+            "name": user.name,
+            "password_hash": password_hash,
+            "created_at": datetime.now(timezone.utc).isoformat()
         }
         
-        # Send OTP based on method
-        if request.method == 'email':
-            # Check if Resend is configured
-            if not RESEND_API_KEY or RESEND_API_KEY == 're_placeholder_get_from_resend_com':
-                logger.warning(f"Resend API key not configured. OTP for {request.identifier}: {otp}")
-                return {
-                    "message": "Email service not configured. Please contact administrator.",
-                    "status": "demo_mode",
-                    "otp": otp  # Show OTP in demo mode only
-                }
-            
-            try:
-                await send_otp_email(request.identifier, otp)
-                logger.info(f"OTP sent to {request.identifier} via email")
-                return {
-                    "message": f"OTP sent to {request.identifier}",
-                    "status": "success"
-                }
-            except Exception as e:
-                logger.error(f"Failed to send OTP email: {str(e)}")
-                # Fallback to demo mode if email fails
-                return {
-                    "message": f"Email sending failed. Demo OTP: {otp}",
-                    "status": "demo_mode",
-                    "otp": otp,
-                    "error": str(e)
-                }
-        else:
-            # SMS not implemented yet
-            logger.info(f"OTP for {request.identifier}: {otp}")
-            return {
-                "message": f"SMS service not implemented. Demo OTP: {otp}",
-                "status": "demo_mode",
-                "otp": otp
-            }
-            
-    except Exception as e:
-        logger.error(f"Error sending OTP: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@api_router.post("/auth/verify-otp")
-async def verify_otp(request: OTPVerify):
-    try:
-        stored = otp_storage.get(request.identifier)
+        # Insert into database
+        await db.users.insert_one(user_doc)
         
-        if not stored:
-            raise HTTPException(status_code=400, detail="OTP not found or expired")
-        
-        # Check if OTP is expired (5 minutes)
-        time_diff = (datetime.now(timezone.utc) - stored['timestamp']).total_seconds()
-        if time_diff > 300:  # 5 minutes
-            del otp_storage[request.identifier]
-            raise HTTPException(status_code=400, detail="OTP expired")
-        
-        # Verify OTP
-        if stored['otp'] != request.otp:
-            raise HTTPException(status_code=400, detail="Invalid OTP")
-        
-        # OTP verified, clean up
-        del otp_storage[request.identifier]
-        
-        # Create user session
-        user_data = {
-            "name": request.name,
-            "identifier": request.identifier,
-            "method": stored['method'],
-            "verified": True
-        }
-        
+        # Return user data (without password hash)
         return {
-            "message": "Login successful",
-            "user": user_data
+            "message": "Account created successfully",
+            "user": {
+                "id": user_doc["id"],
+                "username": user.username,
+                "name": user.name
+            }
         }
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error verifying OTP: {str(e)}")
+        logger.error(f"Error during signup: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/auth/login")
+async def login(credentials: UserLogin):
+    try:
+        # Find user by username
+        user = await db.users.find_one({"username": credentials.username}, {"_id": 0})
+        
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+        
+        # Verify password
+        if not verify_password(credentials.password, user["password_hash"]):
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+        
+        # Return user data (without password hash)
+        return {
+            "message": "Login successful",
+            "user": {
+                "id": user["id"],
+                "username": user["username"],
+                "name": user["name"]
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error during login: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Include the router in the main app
