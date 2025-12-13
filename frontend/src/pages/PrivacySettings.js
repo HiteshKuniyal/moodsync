@@ -152,11 +152,12 @@ const PrivacySettings = () => {
           ))}
         </div>
 
-        {/* Data Management */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-soft border border-border mb-8">
-          <h2 className="text-2xl font-playfair font-bold text-foreground mb-6">
-            Data Management
-          </h2>
+        {/* Data Management - Only for logged in users */}
+        {user && (
+          <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-soft border border-border mb-8">
+            <h2 className="text-2xl font-playfair font-bold text-foreground mb-6">
+              Data Management
+            </h2>
 
           {/* Export Data */}
           <div className="mb-6 pb-6 border-b border-border">
@@ -216,7 +217,27 @@ const PrivacySettings = () => {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        )}
+
+        {/* Login Prompt for Guests */}
+        {!user && (
+          <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-soft border border-border mb-8 text-center">
+            <h2 className="text-2xl font-playfair font-bold text-foreground mb-4">
+              Take Control of Your Data
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Create a free account to access personalized data management features including data export, account control, and complete privacy protection.
+            </p>
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg"
+            >
+              <LogIn className="w-5 h-5" />
+              <span>Login / Sign Up</span>
+            </Link>
+          </div>
+        )}
 
         {/* Privacy Commitment */}
         <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-3xl p-8 border border-primary/20">
