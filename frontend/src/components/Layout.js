@@ -53,21 +53,8 @@ const Layout = ({ children }) => {
             <Link to="/history" className={`text-sm font-semibold hover:text-primary transition-colors ${location.pathname === '/history' ? 'text-primary' : 'text-muted-foreground'}`}>Journey</Link>
           </div>
 
-          {/* Right side - Sound + User + Hamburger */}
+          {/* Right side - User + Hamburger */}
           <div className="flex items-center gap-3">
-            {/* Sound Icon */}
-            <button
-              onClick={toggleSound}
-              className="w-9 h-9 rounded-full bg-white hover:bg-primary/10 border border-primary/20 flex items-center justify-center transition-all hover:scale-110 shadow-sm"
-              title={isPlaying ? 'Mute OM' : 'Play OM'}
-              data-testid="sound-toggle"
-            >
-              {isPlaying ? (
-                <Volume2 className="w-4 h-4 text-primary" />
-              ) : (
-                <VolumeX className="w-4 h-4 text-muted-foreground" />
-              )}
-            </button>
 
             {/* User Icon / Login */}
             {user ? (
