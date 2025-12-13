@@ -3,8 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { Volume2, VolumeX, Menu, X, User } from 'lucide-react';
 
 const Layout = ({ children }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // On by default
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   const [volume, setVolume] = useState(0.3);
   const location = useLocation();
   const [user, setUser] = useState(null);
