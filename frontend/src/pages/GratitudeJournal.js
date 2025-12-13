@@ -180,6 +180,8 @@ const GratitudeJournal = () => {
             </li>
           </ul>
         </div>
+          </>
+        )}
       </div>
     </div>
   );
