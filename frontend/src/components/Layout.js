@@ -21,66 +21,52 @@ const Layout = ({ children }) => {
 
   // Auto-play river sound on mount - removed separate effect, handled in main useEffect
 
-  // Create river flowing sound with Web Audio API
+  // Create peaceful ambient sound with Web Audio API
   useEffect(() => {
     let audioContext;
-    let noiseNode;
-    let filterNodes = [];
+    let oscillators = [];
     let gainNodes = [];
 
-    const playRiverSound = () => {
+    const playPeacefulSound = () => {
       if (audioContext) return;
 
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       audioContext = new AudioContext();
 
-      // Create white noise for water base
-      const bufferSize = 4096;
-      noiseNode = audioContext.createScriptProcessor(bufferSize, 1, 1);
-      
-      noiseNode.onaudioprocess = function(e) {
-        const output = e.outputBuffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          output[i] = Math.random() * 2 - 1;
-        }
-      };
+      // Ultra-peaceful low frequencies with very slow fade-in
+      const peacefulTones = [
+        { freq: 108, gain: 0.08, delay: 0 },     // Sacred OM frequency
+        { freq: 136.1, gain: 0.10, delay: 2 },   // Earth resonance
+        { freq: 216, gain: 0.06, delay: 4 },     // Octave harmonic
+        { freq: 256, gain: 0.04, delay: 6 },     // C note (peace)
+        { freq: 341.3, gain: 0.03, delay: 8 },   // F note (heart)
+      ];
 
-      // Create multiple filters for river-like sound
-      const frequencies = [200, 400, 800, 1600];
-      
-      frequencies.forEach((freq, index) => {
-        const filter = audioContext.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.value = freq;
-        filter.Q.value = 1;
-
+      peacefulTones.forEach((tone) => {
+        const osc = audioContext.createOscillator();
         const gain = audioContext.createGain();
-        gain.gain.value = (0.15 - index * 0.03) * volume;
 
-        if (index === 0) {
-          noiseNode.connect(filter);
-        } else {
-          filterNodes[index - 1].connect(filter);
-        }
+        osc.type = 'sine'; // Pure sine wave for smoothest sound
+        osc.frequency.setValueAtTime(tone.freq, audioContext.currentTime);
         
-        filter.connect(gain);
-        gain.connect(audioContext.destination);
+        // Very gradual fade-in over 10 seconds
+        gain.gain.setValueAtTime(0, audioContext.currentTime + tone.delay);
+        gain.gain.linearRampToValueAtTime(tone.gain * volume, audioContext.currentTime + tone.delay + 10);
 
-        filterNodes.push(filter);
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start(audioContext.currentTime + tone.delay);
+        
+        oscillators.push(osc);
         gainNodes.push(gain);
       });
-
-      noiseNode.connect(audioContext.destination);
     };
 
-    const stopRiverSound = () => {
-      if (noiseNode) {
-        noiseNode.disconnect();
-        noiseNode = null;
-      }
-      filterNodes.forEach(filter => filter.disconnect());
-      gainNodes.forEach(gain => gain.disconnect());
-      filterNodes = [];
+    const stopPeacefulSound = () => {
+      oscillators.forEach(osc => {
+        try { osc.stop(); } catch (e) {}
+      });
+      oscillators = [];
       gainNodes = [];
       if (audioContext) {
         audioContext.close();
@@ -89,12 +75,12 @@ const Layout = ({ children }) => {
     };
 
     if (isPlaying) {
-      playRiverSound();
+      playPeacefulSound();
     } else {
-      stopRiverSound();
+      stopPeacefulSound();
     }
 
-    return () => stopRiverSound();
+    return () => stopPeacefulSound();
   }, [isPlaying, volume]);
 
   const toggleSound = () => {
