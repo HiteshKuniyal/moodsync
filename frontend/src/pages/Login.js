@@ -29,9 +29,13 @@ const Login = () => {
         method: loginMethod
       });
 
-      if (response.data.demo_mode) {
+      // Handle demo mode (when email service not configured)
+      if (response.data.status === 'demo_mode' && response.data.otp) {
         setDemoOtp(response.data.otp);
-        toast.success(`Demo OTP: ${response.data.otp}`);
+        toast.warning(response.data.message);
+      } else if (response.data.status === 'success') {
+        toast.success(response.data.message);
+        setDemoOtp(''); // Clear any previous demo OTP
       } else {
         toast.success(response.data.message);
       }
@@ -172,8 +176,9 @@ const Login = () => {
           ) : (
             <>
               {demoOtp && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                  <p className="text-sm text-blue-800 font-medium">Demo Mode - Your OTP: {demoOtp}</p>
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                  <p className="text-xs text-amber-700 mb-1 font-semibold">⚠️ Demo Mode - Email Service Not Configured</p>
+                  <p className="text-sm text-amber-800 font-medium">Your OTP: <span className="text-2xl font-bold tracking-wider">{demoOtp}</span></p>
                 </div>
               )}
 
