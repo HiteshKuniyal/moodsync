@@ -128,16 +128,16 @@ const LifestyleAssessment = () => {
           {weeklyReport && weeklyReport.total_entries > 0 && (
             <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-soft border border-border">
               <h3 className="text-2xl font-playfair font-bold text-foreground mb-6">
-                Weekly Wellness Report
+                Wellness Report
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="bg-primary/10 rounded-2xl p-6">
-                  <p className="text-sm text-muted-foreground mb-2">Overall Average</p>
+                  <p className="text-sm text-muted-foreground mb-2">Current Week Average</p>
                   <p className="text-4xl font-playfair font-bold text-primary">{weeklyReport.overall_average}/10</p>
                   <p className="text-sm text-muted-foreground mt-2">
                     Trend: <span className={`font-semibold ${weeklyReport.trend === 'improving' ? 'text-green-600' : weeklyReport.trend === 'declining' ? 'text-red-600' : 'text-gray-600'}`}>
-                      {weeklyReport.trend}
+                      {weeklyReport.trend === 'improving' ? '📈 Improving' : weeklyReport.trend === 'declining' ? '📉 Declining' : '➡️ Stable'}
                     </span>
                   </p>
                 </div>
@@ -146,13 +146,42 @@ const LifestyleAssessment = () => {
                   <p className="text-sm text-muted-foreground mb-2">Assessment Period</p>
                   <p className="text-2xl font-semibold text-foreground">{weeklyReport.period}</p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    {weeklyReport.total_entries} entries recorded
+                    {weeklyReport.total_entries} total entries
                   </p>
                 </div>
               </div>
 
+              {/* Historical Trend Chart */}
+              {weeklyReport.weekly_trends && weeklyReport.weekly_trends.length > 0 && (
+                <div className="mb-6 bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-6">
+                  <h4 className="font-semibold text-foreground mb-4">Historical Trend</h4>
+                  <div className="space-y-3">
+                    {weeklyReport.weekly_trends.slice(0, 6).map((week, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                        <div className="w-20 text-xs text-muted-foreground flex-shrink-0">
+                          Week {week.week.split('-W')[1]}
+                        </div>
+                        <div className="flex-1 bg-white rounded-full h-6 overflow-hidden relative">
+                          <div 
+                            className={`h-full rounded-full transition-all ${
+                              week.overall_average >= 8 ? 'bg-green-500' : 
+                              week.overall_average >= 6 ? 'bg-yellow-500' : 
+                              week.overall_average >= 4 ? 'bg-orange-500' : 'bg-red-500'
+                            }`}
+                            style={{ width: `${(week.overall_average / 10) * 100}%` }}
+                          ></div>
+                        </div>
+                        <div className={`w-12 text-sm font-bold text-right ${getScoreColor(week.overall_average)}`}>
+                          {week.overall_average}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-4 mb-6">
-                <h4 className="font-semibold text-foreground">Pillar Scores</h4>
+                <h4 className="font-semibold text-foreground">Current Week Pillar Scores</h4>
                 {Object.entries(weeklyReport.pillars).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
                     <span className="text-sm capitalize">{key.replace(/_/g, ' ')}</span>
@@ -163,7 +192,7 @@ const LifestyleAssessment = () => {
 
               {weeklyReport.strengths.length > 0 && (
                 <div className="mb-4">
-                  <h4 className="font-semibold text-green-600 mb-2">Strengths</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">✅ Strengths</h4>
                   <div className="flex flex-wrap gap-2">
                     {weeklyReport.strengths.map((strength, idx) => (
                       <span key={idx} className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
@@ -176,7 +205,7 @@ const LifestyleAssessment = () => {
 
               {weeklyReport.areas_for_improvement.length > 0 && (
                 <div>
-                  <h4 className="font-semibold text-orange-600 mb-2">Areas for Improvement</h4>
+                  <h4 className="font-semibold text-orange-600 mb-2">💡 Areas for Improvement</h4>
                   <div className="flex flex-wrap gap-2">
                     {weeklyReport.areas_for_improvement.map((area, idx) => (
                       <span key={idx} className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
