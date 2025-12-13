@@ -512,7 +512,7 @@ async def signup(user: UserSignup):
             "user": {
                 "id": user_doc["id"],
                 "username": user.username,
-                "name": user.name
+                "name": user_doc["name"]
             }
         }
     except HTTPException:
