@@ -306,8 +306,8 @@ async def get_weekly_wellness_report(request: Request):
         user_id = get_user_id_from_header(request)
         query = {"user_id": user_id} if user_id else {}
         
-        # Get all lifestyle assessments
-        all_assessments = await db.lifestyle_assessments.find(query, {"_id": 0}).sort("date", -1).to_list(None)
+        # Get all lifestyle assessments (limited to last 1000 for performance)
+        all_assessments = await db.lifestyle_assessments.find(query, {"_id": 0}).sort("date", -1).limit(1000).to_list(1000)
         
         if not all_assessments:
             return {"message": "No data available for report"}
@@ -439,11 +439,11 @@ async def get_trigger_insights(request: Request):
         if user_id:
             query["user_id"] = user_id
         
-        # Get all mood entries with triggers
+        # Get all mood entries with triggers (limited to last 500)
         entries = await db.mood_entries.find(
             query,
             {"_id": 0, "trigger": 1, "emotion": 1}
-        ).to_list(None)
+        ).limit(500).to_list(500)
         
         # Aggregate common triggers
         trigger_counts = {}
@@ -479,11 +479,15 @@ async def get_trigger_heatmap(request: Request):
         if user_id:
             query["user_id"] = user_id
         
-        # Get mood entries from last 90 days
+        # Get mood entries from last 90 days (limited to 500 entries)
+        from datetime import timedelta
+        ninety_days_ago = datetime.now(timezone.utc) - timedelta(days=90)
+        query["timestamp"] = {"$gte": ninety_days_ago.isoformat()}
+        
         entries = await db.mood_entries.find(
             query,
             {"_id": 0, "trigger": 1, "emotion": 1, "timestamp": 1, "emotion_level": 1}
-        ).to_list(None)
+        ).limit(500).to_list(500)
         
         # Create heatmap data
         heatmap_data = []
