@@ -94,28 +94,6 @@ const PrivacySettings = () => {
     }
   ];
 
-  if (!user) {
-    return (
-      <div className="min-h-[calc(100vh-96px)] py-12 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <Shield className="w-16 h-16 text-primary mx-auto mb-6" />
-          <h1 className="text-4xl font-playfair font-bold text-foreground mb-4">
-            Privacy & Data Control
-          </h1>
-          <p className="text-muted-foreground mb-8">
-            Please login to access privacy settings and manage your data.
-          </p>
-          <a
-            href="/login"
-            className="inline-block px-8 py-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg"
-          >
-            Login / Sign Up
-          </a>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-[calc(100vh-96px)] py-12 px-6">
       <div className="max-w-4xl mx-auto">
