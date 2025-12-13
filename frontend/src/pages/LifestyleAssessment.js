@@ -7,6 +7,7 @@ import GuestProtection from '../components/GuestProtection';
 
 const LifestyleAssessment = () => {
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('moodSyncUser') || 'null');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [weeklyReport, setWeeklyReport] = useState(null);
