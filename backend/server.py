@@ -424,6 +424,87 @@ async def get_trigger_heatmap():
         logger.error(f"Error fetching trigger heatmap: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Authentication Endpoints
+import random
+import string
+
+# In-memory OTP storage (in production, use Redis or database)
+otp_storage = {}
+
+class OTPRequest(BaseModel):
+    identifier: str  # email or phone
+    method: str  # 'email' or 'phone'
+
+class OTPVerify(BaseModel):
+    identifier: str
+    otp: str
+    name: str
+
+@api_router.post("/auth/send-otp")
+async def send_otp(request: OTPRequest):
+    try:
+        # Generate 6-digit OTP
+        otp = ''.join(random.choices(string.digits, k=6))
+        
+        # Store OTP (expires in 5 minutes)
+        otp_storage[request.identifier] = {
+            'otp': otp,
+            'timestamp': datetime.now(timezone.utc),
+            'method': request.method
+        }
+        
+        # In production, send actual email/SMS here
+        logger.info(f"OTP for {request.identifier}: {otp}")
+        
+        # For demo purposes, return OTP in response (remove in production)
+        return {
+            "message": f"OTP sent to {request.identifier}",
+            "otp": otp,  # Remove this in production
+            "demo_mode": True
+        }
+    except Exception as e:
+        logger.error(f"Error sending OTP: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/auth/verify-otp")
+async def verify_otp(request: OTPVerify):
+    try:
+        stored = otp_storage.get(request.identifier)
+        
+        if not stored:
+            raise HTTPException(status_code=400, detail="OTP not found or expired")
+        
+        # Check if OTP is expired (5 minutes)
+        time_diff = (datetime.now(timezone.utc) - stored['timestamp']).total_seconds()
+        if time_diff > 300:  # 5 minutes
+            del otp_storage[request.identifier]
+            raise HTTPException(status_code=400, detail="OTP expired")
+        
+        # Verify OTP
+        if stored['otp'] != request.otp:
+            raise HTTPException(status_code=400, detail="Invalid OTP")
+        
+        # OTP verified, clean up
+        del otp_storage[request.identifier]
+        
+        # Create user session
+        user_data = {
+            "name": request.name,
+            "identifier": request.identifier,
+            "method": stored['method'],
+            "verified": True
+        }
+        
+        return {
+            "message": "Login successful",
+            "user": user_data
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verifying OTP: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
