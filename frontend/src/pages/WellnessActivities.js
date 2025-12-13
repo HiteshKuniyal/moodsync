@@ -4,14 +4,10 @@ import { toast } from 'sonner';
 
 const WellnessActivities = () => {
   const [selectedTimer, setSelectedTimer] = useState(null);
-  const [selectedMeditationTimer, setSelectedMeditationTimer] = useState(null);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [meditationTimeLeft, setMeditationTimeLeft] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
-  const [isMeditationRunning, setIsMeditationRunning] = useState(false);
   const [phase, setPhase] = useState('inhale'); // inhale, hold, exhale
   const intervalRef = useRef(null);
-  const meditationIntervalRef = useRef(null);
 
   const timerOptions = [
     { duration: 3, label: '3 Minutes', desc: 'Quick calm' },
