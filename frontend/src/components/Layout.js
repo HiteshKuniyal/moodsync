@@ -81,7 +81,7 @@ const Layout = ({ children }) => {
                 )}
               </div>
             ) : (
-              <Link to="/login" className="hidden md:block text-xs font-semibold text-primary hover:underline">Login</Link>
+              <Link to="/login" className="hidden md:block text-xs font-semibold text-primary hover:underline">Login / Sign Up</Link>
             )}
 
             {/* Hamburger Menu */}

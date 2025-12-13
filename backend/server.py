@@ -459,7 +459,7 @@ import bcrypt
 class UserSignup(BaseModel):
     username: str
     password: str
-    name: str
+    name: Optional[str] = None
 
 class UserLogin(BaseModel):
     username: str
@@ -498,7 +498,7 @@ async def signup(user: UserSignup):
         user_doc = {
             "id": str(uuid.uuid4()),
             "username": user.username,
-            "name": user.name,
+            "name": user.name if user.name else user.username,
             "password_hash": password_hash,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
