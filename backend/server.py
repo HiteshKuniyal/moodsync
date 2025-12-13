@@ -163,8 +163,15 @@ async def submit_mood(mood_input: MoodEntryCreate, request: Request):
     try:
         user_id = get_user_id_from_header(request)
         
-        # Generate AI guidance
-        ai_guidance = await generate_mood_guidance(mood_input)
+        # Get user name for personalization
+        user_name = None
+        if user_id:
+            user = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1})
+            if user:
+                user_name = user.get("name")
+        
+        # Generate AI guidance with user name
+        ai_guidance = await generate_mood_guidance(mood_input, user_name)
         
         # Create mood entry with AI guidance
         mood_dict = mood_input.model_dump()
