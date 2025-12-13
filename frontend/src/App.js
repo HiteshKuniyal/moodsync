@@ -11,6 +11,7 @@ import Resources from './pages/Resources';
 import LifestyleAssessment from './pages/LifestyleAssessment';
 import GratitudeJournal from './pages/GratitudeJournal';
 import Login from './pages/Login';
+import PrivacySettings from './pages/PrivacySettings';
 import { Toaster } from './components/ui/sonner';
 import { startReminderService } from './utils/notifications';
 import './App.css';
@@ -35,6 +36,7 @@ function App() {
           <Route path="/resources" element={<Resources />} />
           <Route path="/lifestyle-assessment" element={<LifestyleAssessment />} />
           <Route path="/gratitude" element={<GratitudeJournal />} />
+          <Route path="/privacy" element={<PrivacySettings />} />
         </Routes>
       </Layout>
       <Toaster position="top-center" richColors />
