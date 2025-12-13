@@ -270,55 +270,83 @@ async def get_lifestyle_history(limit: int = 10):
 @api_router.get("/lifestyle/weekly-report")
 async def get_weekly_wellness_report():
     try:
-        # Get lifestyle assessments from last 7 days
-        assessments = await db.lifestyle_assessments.find({}, {"_id": 0}).sort("date", -1).limit(7).to_list(7)
+        from collections import defaultdict
         
-        if not assessments:
+        # Get all lifestyle assessments
+        all_assessments = await db.lifestyle_assessments.find({}, {"_id": 0}).sort("date", -1).to_list(None)
+        
+        if not all_assessments:
             return {"message": "No data available for report"}
         
-        # Calculate averages
-        total = len(assessments)
-        avg_sleep = sum(a['sleep_quality'] for a in assessments) / total
-        avg_nutrition = sum(a['nutrition'] for a in assessments) / total
-        avg_social = sum(a['social_connection'] for a in assessments) / total
-        avg_purpose = sum(a['purpose_growth'] for a in assessments) / total
-        avg_stress = sum(a['stress_management'] for a in assessments) / total
-        overall_avg = sum(a['average_score'] for a in assessments) / total
+        # Group assessments by week
+        weekly_data = defaultdict(list)
+        for assessment in all_assessments:
+            date_str = assessment.get('date', '')
+            if date_str:
+                # Parse date and get week number
+                try:
+                    date_obj = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                    week_key = date_obj.strftime("%Y-W%U")  # Year-Week format
+                    weekly_data[week_key].append(assessment)
+                except Exception:
+                    continue
         
-        # Determine trends (compare first half vs second half)
-        mid = total // 2
-        if total >= 4:
-            first_half_avg = sum(a['average_score'] for a in assessments[mid:]) / len(assessments[mid:])
-            second_half_avg = sum(a['average_score'] for a in assessments[:mid]) / len(assessments[:mid])
-            trend = "improving" if second_half_avg > first_half_avg else "declining" if second_half_avg < first_half_avg else "stable"
-        else:
-            trend = "stable"
+        # Calculate averages per week
+        weekly_trends = []
+        for week, assessments in sorted(weekly_data.items(), reverse=True)[:8]:  # Last 8 weeks
+            total = len(assessments)
+            avg_sleep = sum(a['sleep_quality'] for a in assessments) / total
+            avg_nutrition = sum(a['nutrition'] for a in assessments) / total
+            avg_social = sum(a['social_connection'] for a in assessments) / total
+            avg_purpose = sum(a['purpose_growth'] for a in assessments) / total
+            avg_stress = sum(a['stress_management'] for a in assessments) / total
+            overall_avg = (avg_sleep + avg_nutrition + avg_social + avg_purpose + avg_stress) / 5
+            
+            weekly_trends.append({
+                "week": week,
+                "overall_average": round(overall_avg, 1),
+                "entries_count": total,
+                "pillars": {
+                    "sleep_quality": round(avg_sleep, 1),
+                    "nutrition": round(avg_nutrition, 1),
+                    "social_connection": round(avg_social, 1),
+                    "purpose_growth": round(avg_purpose, 1),
+                    "stress_management": round(avg_stress, 1)
+                }
+            })
         
+        # Calculate current week (most recent)
+        current_week_data = weekly_trends[0] if weekly_trends else None
+        
+        # Determine overall trend (compare last 2 weeks if available)
+        trend = "stable"
+        if len(weekly_trends) >= 2:
+            current_avg = weekly_trends[0]['overall_average']
+            previous_avg = weekly_trends[1]['overall_average']
+            if current_avg > previous_avg + 0.5:
+                trend = "improving"
+            elif current_avg < previous_avg - 0.5:
+                trend = "declining"
+        
+        # Build report
         report = {
-            "period": "Last 7 days",
-            "total_entries": total,
-            "overall_average": round(overall_avg, 1),
+            "period": f"Last {len(weekly_trends)} weeks",
+            "total_entries": len(all_assessments),
+            "overall_average": current_week_data['overall_average'] if current_week_data else 0,
             "trend": trend,
-            "pillars": {
-                "sleep_quality": round(avg_sleep, 1),
-                "nutrition": round(avg_nutrition, 1),
-                "social_connection": round(avg_social, 1),
-                "purpose_growth": round(avg_purpose, 1),
-                "stress_management": round(avg_stress, 1)
-            },
+            "pillars": current_week_data['pillars'] if current_week_data else {},
+            "weekly_trends": weekly_trends,
             "strengths": [],
             "areas_for_improvement": []
         }
         
-        # Identify strengths (>= 8)
-        for key, value in report["pillars"].items():
-            if value >= 8:
-                report["strengths"].append(key.replace("_", " ").title())
-        
-        # Identify areas for improvement (<= 5)
-        for key, value in report["pillars"].items():
-            if value <= 5:
-                report["areas_for_improvement"].append(key.replace("_", " ").title())
+        # Identify strengths and areas for improvement (from current week)
+        if current_week_data:
+            for key, value in current_week_data["pillars"].items():
+                if value >= 8:
+                    report["strengths"].append(key.replace("_", " ").title())
+                elif value <= 5:
+                    report["areas_for_improvement"].append(key.replace("_", " ").title())
         
         return report
     except Exception as e:
