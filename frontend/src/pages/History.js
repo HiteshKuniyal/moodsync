@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Calendar, TrendingUp, Brain, Zap, Eye, Plus } from 'lucide-react';
 import { toast } from 'sonner';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import apiClient from '../utils/api';
 
 const History = () => {
   const navigate = useNavigate();
@@ -30,7 +27,7 @@ const History = () => {
 
   const fetchTriggerInsights = async () => {
     try {
-      const response = await axios.get(`${API}/mood/trigger-insights`);
+      const response = await apiClient.get('/mood/trigger-insights');
       setTriggerInsights(response.data);
     } catch (error) {
       console.error('Error fetching trigger insights:', error);
@@ -39,7 +36,7 @@ const History = () => {
 
   const fetchTriggerHeatmap = async () => {
     try {
-      const response = await axios.get(`${API}/mood/trigger-heatmap`);
+      const response = await apiClient.get('/mood/trigger-heatmap');
       setTriggerHeatmap(response.data);
     } catch (error) {
       console.error('Error fetching trigger heatmap:', error);
@@ -49,8 +46,8 @@ const History = () => {
   const fetchMoodData = async () => {
     try {
       const [historyRes, trendsRes] = await Promise.all([
-        axios.get(`${API}/mood/history?limit=10`),
-        axios.get(`${API}/mood/trends?days=14`),
+        apiClient.get('/mood/history?limit=10'),
+        apiClient.get('/mood/trends?days=14'),
       ]);
 
       setMoodHistory(historyRes.data);
