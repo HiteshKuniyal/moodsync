@@ -184,11 +184,14 @@ async def submit_mood(mood_input: MoodEntryCreate, request: Request):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/mood/history", response_model=List[MoodEntry])
-async def get_mood_history(limit: int = 30):
+async def get_mood_history(request: Request, limit: int = 30):
     try:
+        user_id = get_user_id_from_header(request)
+        query = {"user_id": user_id} if user_id else {}
+        
         # Get recent mood entries
         mood_entries = await db.mood_entries.find(
-            {}, 
+            query, 
             {"_id": 0}
         ).sort("timestamp", -1).limit(limit).to_list(limit)
         
@@ -203,8 +206,11 @@ async def get_mood_history(limit: int = 30):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/mood/trends", response_model=List[MoodTrend])
-async def get_mood_trends(days: int = 14):
+async def get_mood_trends(request: Request, days: int = 14):
     try:
+        user_id = get_user_id_from_header(request)
+        query = {"user_id": user_id} if user_id else {}
+        
         # Calculate date range
         end_date = datetime.now(timezone.utc)
         start_date = end_date.replace(hour=0, minute=0, second=0, microsecond=0)
