@@ -95,6 +95,23 @@ const History = () => {
     );
   }
 
+  // Show guest protection if not logged in
+  if (!user) {
+    return (
+      <div className="min-h-[calc(100vh-80px)] py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-fraunces font-semibold text-foreground mb-2">
+              My Wellness Journey
+            </h1>
+            <p className="text-muted-foreground">Track your emotional patterns and celebrate your progress</p>
+          </div>
+          <GuestProtection feature="Your Personal Journey" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-[calc(100vh-80px)] py-12 px-6">
       <div className="max-w-7xl mx-auto">
