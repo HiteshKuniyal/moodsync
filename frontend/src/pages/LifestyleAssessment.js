@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
+import GuestProtection from '../components/GuestProtection';
 
 const LifestyleAssessment = () => {
   const navigate = useNavigate();
