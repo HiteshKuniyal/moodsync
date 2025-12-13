@@ -101,3 +101,73 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Test the Mood Sync application focusing on Wellness Activities Page, OTP Login Flow, Gratitude Journal, and Weekly Wellness Report with historical trends"
+
+frontend:
+  - task: "Wellness Activities Page"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/WellnessActivities.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing - need to verify page loads without errors, breathing exercise timer (3 minutes), and PMR session link"
+
+  - task: "OTP Login Flow"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Login.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing - need to verify email integration, demo mode OTP display, and OTP verification"
+
+  - task: "Gratitude Journal"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/GratitudeJournal.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing - need to verify adding new entries, saving, and display in list"
+
+  - task: "Weekly Wellness Report"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/LifestyleAssessment.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "testing"
+        comment: "Initial testing - need to verify lifestyle assessment form, report generation with historical trends, pillar scores, and strengths/improvements"
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+
+test_plan:
+  current_focus:
+    - "Wellness Activities Page"
+    - "OTP Login Flow"
+    - "Gratitude Journal"
+    - "Weekly Wellness Report"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "testing"
+    message: "Starting comprehensive testing of Mood Sync application key flows. Will test all 4 main features using Playwright automation."
