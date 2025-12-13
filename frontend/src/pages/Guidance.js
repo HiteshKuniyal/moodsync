@@ -108,13 +108,6 @@ const Guidance = () => {
           }}
         >
           <div className="prose prose-lg max-w-none">
-            <div className="mb-6">
-              <h3 className="text-2xl font-fraunces font-semibold text-foreground mb-2">
-                Dear {user?.name || user?.username || 'Friend'},
-              </h3>
-              <div className="w-16 h-1 bg-primary rounded-full" />
-            </div>
-
             <div className="text-foreground/90 leading-relaxed whitespace-pre-line font-manrope">
               {moodEntry.ai_guidance.split(/(breathing|breathe|breath)/gi).map((part, index) => {
                 if (part.toLowerCase().match(/breath/)) {
