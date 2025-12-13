@@ -75,10 +75,6 @@ const LifestyleAssessment = () => {
       } catch (err) {
         console.error('Error fetching weekly report:', err);
       }
-      
-      setTimeout(() => {
-        navigate('/history');
-      }, 5000);
     } catch (error) {
       console.error('Error submitting assessment:', error);
       toast.error('Failed to save assessment. Please try again.');
