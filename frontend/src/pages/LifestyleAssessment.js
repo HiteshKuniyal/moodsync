@@ -188,6 +188,16 @@ const LifestyleAssessment = () => {
               )}
             </div>
           )}
+
+          {/* Close/Continue Button */}
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => navigate('/history')}
+              className="px-8 py-3 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg"
+            >
+              View My Journey
+            </button>
+          </div>
         </div>
       </div>
     );
