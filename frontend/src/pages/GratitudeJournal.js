@@ -87,14 +87,14 @@ const GratitudeJournal = () => {
         </div>
 
         {/* Guest Protection */}
-        {!user && (
+        {!user ? (
           <div className="mb-8">
             <GuestProtection feature="Your Gratitude Journal" />
           </div>
-        )}
-
-        {/* New Entry Form */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-soft border border-border mb-8">
+        ) : (
+          <>
+            {/* New Entry Form */}
+            <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-soft border border-border mb-8">
           <h2 className="text-xl font-playfair font-semibold text-foreground mb-4">
             What are you grateful for today?
           </h2>
