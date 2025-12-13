@@ -97,7 +97,7 @@ class LifestyleAssessment(BaseModel):
     average_score: float
 
 # Helper function to generate AI guidance
-async def generate_mood_guidance(mood_data: MoodEntryCreate) -> str:
+async def generate_mood_guidance(mood_data: MoodEntryCreate, user_name: Optional[str] = None) -> str:
     try:
         api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not api_key:
