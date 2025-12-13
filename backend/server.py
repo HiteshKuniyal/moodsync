@@ -236,8 +236,10 @@ async def get_mood_trends(days: int = 14):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/lifestyle/assess", response_model=LifestyleAssessment)
-async def submit_lifestyle_assessment(assessment: LifestyleAssessmentCreate):
+async def submit_lifestyle_assessment(assessment: LifestyleAssessmentCreate, request: Request):
     try:
+        user_id = get_user_id_from_header(request)
+        
         # Calculate average score
         scores = [
             assessment.sleep_quality,
@@ -251,6 +253,7 @@ async def submit_lifestyle_assessment(assessment: LifestyleAssessmentCreate):
         # Create lifestyle assessment object
         assessment_dict = assessment.model_dump()
         assessment_dict['average_score'] = round(average_score, 1)
+        assessment_dict['user_id'] = user_id
         assessment_obj = LifestyleAssessment(**assessment_dict)
         
         # Store in MongoDB
@@ -276,12 +279,15 @@ async def get_lifestyle_history(limit: int = 10):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/lifestyle/weekly-report")
-async def get_weekly_wellness_report():
+async def get_weekly_wellness_report(request: Request):
     try:
         from collections import defaultdict
         
+        user_id = get_user_id_from_header(request)
+        query = {"user_id": user_id} if user_id else {}
+        
         # Get all lifestyle assessments
-        all_assessments = await db.lifestyle_assessments.find({}, {"_id": 0}).sort("date", -1).to_list(None)
+        all_assessments = await db.lifestyle_assessments.find(query, {"_id": 0}).sort("date", -1).to_list(None)
         
         if not all_assessments:
             return {"message": "No data available for report"}
@@ -370,8 +376,10 @@ class GratitudeEntry(BaseModel):
     date: str
 
 @api_router.post("/gratitude/add", response_model=GratitudeEntry)
-async def add_gratitude_entry(entry: GratitudeEntry):
+async def add_gratitude_entry(entry: GratitudeEntry, request: Request):
     try:
+        user_id = get_user_id_from_header(request)
+        entry.user_id = user_id
         doc = entry.model_dump()
         await db.gratitude_entries.insert_one(doc)
         return entry
@@ -380,9 +388,12 @@ async def add_gratitude_entry(entry: GratitudeEntry):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.get("/gratitude/entries", response_model=List[GratitudeEntry])
-async def get_gratitude_entries(limit: int = 30):
+async def get_gratitude_entries(request: Request, limit: int = 30):
     try:
-        entries = await db.gratitude_entries.find({}, {"_id": 0}).sort("date", -1).limit(limit).to_list(limit)
+        user_id = get_user_id_from_header(request)
+        query = {"user_id": user_id} if user_id else {}
+        
+        entries = await db.gratitude_entries.find(query, {"_id": 0}).sort("date", -1).limit(limit).to_list(limit)
         return entries
     except Exception as e:
         logger.error(f"Error fetching gratitude entries: {str(e)}")
