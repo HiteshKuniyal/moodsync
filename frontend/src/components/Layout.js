@@ -22,6 +22,13 @@ const Layout = ({ children }) => {
     setMobileMenuOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('moodSyncUser');
+    setUser(null);
+    setMobileMenuOpen(false);
+    window.location.href = '/';
+  };
+
   return (
     <div className="min-h-screen" style={{
       backgroundImage: 'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.85)), url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2070)',
@@ -109,13 +116,27 @@ const Layout = ({ children }) => {
               <Link to="/privacy" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-foreground hover:text-primary">Privacy & Data</Link>
               <div className="pt-3 border-t border-border">
                 {user ? (
-                  <div className="flex items-center gap-2 py-2">
-                    <User className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-primary">{user.name || user.phone}</span>
-                  </div>
+                  <>
+                    <div className="flex items-center gap-2 py-2 mb-2">
+                      <User className="w-4 h-4 text-primary" />
+                      <span className="text-sm font-medium text-primary">{user.name || user.username}</span>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left py-2 text-sm font-semibold text-red-600 hover:text-red-700"
+                    >
+                      Logout
+                    </button>
+                  </>
                 ) : (
                   <Link to="/login" onClick={closeMobileMenu} className="block py-2 text-sm font-semibold text-primary">Login / Sign Up</Link>
                 )}
+              </div>
+              {/* Footer Attribution in Mobile Menu */}
+              <div className="pt-3 border-t border-border">
+                <p className="text-xs text-center text-muted-foreground">
+                  An initiative by Hitesh Kuniyal
+                </p>
               </div>
             </div>
           </div>
