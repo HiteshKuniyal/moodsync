@@ -12,6 +12,7 @@ import LifestyleAssessment from './pages/LifestyleAssessment';
 import GratitudeJournal from './pages/GratitudeJournal';
 import Login from './pages/Login';
 import PrivacySettings from './pages/PrivacySettings';
+import ScrollToTop from './components/ScrollToTop';
 import { Toaster } from './components/ui/sonner';
 import { startReminderService } from './utils/notifications';
 import './App.css';
@@ -24,6 +25,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Landing />} />
