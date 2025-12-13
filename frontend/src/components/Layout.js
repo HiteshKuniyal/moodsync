@@ -16,73 +16,7 @@ const Layout = ({ children }) => {
     }
   }, []);
 
-  // Auto-play river sound on mount - removed separate effect, handled in main useEffect
-
-  // Create peaceful ambient sound with Web Audio API
-  useEffect(() => {
-    let audioContext;
-    let oscillators = [];
-    let gainNodes = [];
-
-    const playPeacefulSound = () => {
-      if (audioContext) return;
-
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      audioContext = new AudioContext();
-
-      // Ultra-peaceful low frequencies with very slow fade-in
-      const peacefulTones = [
-        { freq: 108, gain: 0.08, delay: 0 },     // Sacred OM frequency
-        { freq: 136.1, gain: 0.10, delay: 2 },   // Earth resonance
-        { freq: 216, gain: 0.06, delay: 4 },     // Octave harmonic
-        { freq: 256, gain: 0.04, delay: 6 },     // C note (peace)
-        { freq: 341.3, gain: 0.03, delay: 8 },   // F note (heart)
-      ];
-
-      peacefulTones.forEach((tone) => {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        osc.type = 'sine'; // Pure sine wave for smoothest sound
-        osc.frequency.setValueAtTime(tone.freq, audioContext.currentTime);
-        
-        // Very gradual fade-in over 10 seconds
-        gain.gain.setValueAtTime(0, audioContext.currentTime + tone.delay);
-        gain.gain.linearRampToValueAtTime(tone.gain * volume, audioContext.currentTime + tone.delay + 10);
-
-        osc.connect(gain);
-        gain.connect(audioContext.destination);
-        osc.start(audioContext.currentTime + tone.delay);
-        
-        oscillators.push(osc);
-        gainNodes.push(gain);
-      });
-    };
-
-    const stopPeacefulSound = () => {
-      oscillators.forEach(osc => {
-        try { osc.stop(); } catch (e) {}
-      });
-      oscillators = [];
-      gainNodes = [];
-      if (audioContext) {
-        audioContext.close();
-        audioContext = null;
-      }
-    };
-
-    if (isPlaying) {
-      playPeacefulSound();
-    } else {
-      stopPeacefulSound();
-    }
-
-    return () => stopPeacefulSound();
-  }, [isPlaying, volume]);
-
-  const toggleSound = () => {
-    setIsPlaying(!isPlaying);
-  };
+  // Sound feature removed as per user request
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
