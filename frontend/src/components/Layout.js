@@ -19,75 +19,104 @@ const Layout = ({ children }) => {
     }
   }, []);
 
-  // Auto-play peaceful music on first interaction
+  // Auto-play river sound on mount
   useEffect(() => {
-    const handleFirstClick = () => {
-      if (audioRef.current && !isPlaying) {
-        audioRef.current.play().then(() => {
-          setIsPlaying(true);
-        }).catch(e => console.log('Auto-play prevented:', e));
-        document.removeEventListener('click', handleFirstClick);
+    const startAudio = () => {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContext();
+      
+      if (audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+      
+      // Start playing immediately
+      playRiverSound(audioContext);
+    };
+
+    // Try to start on mount
+    const timer = setTimeout(() => {
+      if (isPlaying) {
+        startAudio();
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Create river flowing sound with Web Audio API
+  useEffect(() => {
+    let audioContext;
+    let noiseNode;
+    let filterNodes = [];
+    let gainNodes = [];
+
+    const playRiverSound = () => {
+      if (audioContext) return;
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioContext = new AudioContext();
+
+      // Create white noise for water base
+      const bufferSize = 4096;
+      noiseNode = audioContext.createScriptProcessor(bufferSize, 1, 1);
+      
+      noiseNode.onaudioprocess = function(e) {
+        const output = e.outputBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          output[i] = Math.random() * 2 - 1;
+        }
+      };
+
+      // Create multiple filters for river-like sound
+      const frequencies = [200, 400, 800, 1600];
+      
+      frequencies.forEach((freq, index) => {
+        const filter = audioContext.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = freq;
+        filter.Q.value = 1;
+
+        const gain = audioContext.createGain();
+        gain.gain.value = (0.15 - index * 0.03) * volume;
+
+        if (index === 0) {
+          noiseNode.connect(filter);
+        } else {
+          filterNodes[index - 1].connect(filter);
+        }
+        
+        filter.connect(gain);
+        gain.connect(audioContext.destination);
+
+        filterNodes.push(filter);
+        gainNodes.push(gain);
+      });
+
+      noiseNode.connect(audioContext.destination);
+    };
+
+    const stopRiverSound = () => {
+      if (noiseNode) {
+        noiseNode.disconnect();
+        noiseNode = null;
+      }
+      filterNodes.forEach(filter => filter.disconnect());
+      gainNodes.forEach(gain => gain.disconnect());
+      filterNodes = [];
+      gainNodes = [];
+      if (audioContext) {
+        audioContext.close();
+        audioContext = null;
       }
     };
 
-    document.addEventListener('click', handleFirstClick);
-    return () => document.removeEventListener('click', handleFirstClick);
-  }, [isPlaying]);
-
-  // Create peaceful ambient music with Web Audio API
-  useEffect(() => {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioContext = new AudioContext();
-    let oscillators = [];
-    let gainNodes = [];
-
-    const playPeacefulMusic = () => {
-      if (oscillators.length > 0) return;
-
-      // Peaceful frequencies creating a calm soundscape
-      const peacefulFreqs = [
-        { freq: 174, gain: 0.08, delay: 0 },      // Pain relief frequency
-        { freq: 285, gain: 0.06, delay: 0.5 },    // Healing frequency
-        { freq: 396, gain: 0.05, delay: 1 },      // Liberating guilt/fear
-        { freq: 528, gain: 0.07, delay: 1.5 },    // DNA repair/love frequency
-        { freq: 639, gain: 0.04, delay: 2 },      // Relationships
-        { freq: 741, gain: 0.03, delay: 2.5 },    // Awakening intuition
-      ];
-
-      peacefulFreqs.forEach((note) => {
-        const osc = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(note.freq, audioContext.currentTime);
-        
-        gain.gain.setValueAtTime(0, audioContext.currentTime + note.delay);
-        gain.gain.linearRampToValueAtTime(note.gain * volume, audioContext.currentTime + note.delay + 6);
-
-        osc.connect(gain);
-        gain.connect(audioContext.destination);
-        osc.start(audioContext.currentTime + note.delay);
-        
-        oscillators.push(osc);
-        gainNodes.push(gain);
-      });
-    };
-
-    const stopMusic = () => {
-      oscillators.forEach(osc => {
-        try { osc.stop(); } catch (e) {}
-      });
-      oscillators = [];
-      gainNodes = [];
-    };
-
     if (isPlaying) {
-      playPeacefulMusic();
+      playRiverSound();
     } else {
-      stopMusic();
+      stopRiverSound();
     }
 
-    return () => stopMusic();
+    return () => stopRiverSound();
   }, [isPlaying, volume]);
 
   const toggleSound = () => {
