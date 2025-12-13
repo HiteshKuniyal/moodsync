@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Plus, Calendar, Trash2, Edit2 } from 'lucide-react';
-import axios from 'axios';
 import { toast } from 'sonner';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import apiClient from '../utils/api';
 
 const GratitudeJournal = () => {
   const [entries, setEntries] = useState([]);
@@ -17,7 +14,7 @@ const GratitudeJournal = () => {
 
   const fetchEntries = async () => {
     try {
-      const response = await axios.get(`${API}/gratitude/entries`);
+      const response = await apiClient.get('/gratitude/entries');
       setEntries(response.data);
     } catch (error) {
       console.error('Error fetching gratitude entries:', error);
@@ -33,7 +30,7 @@ const GratitudeJournal = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API}/gratitude/add`, {
+      const response = await apiClient.post('/gratitude/add', {
         content: newEntry,
         date: new Date().toISOString()
       });
@@ -50,7 +47,7 @@ const GratitudeJournal = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API}/gratitude/delete/${id}`);
+      await apiClient.delete(`/gratitude/delete/${id}`);
       setEntries(entries.filter(e => e.id !== id));
       toast.success('Entry deleted');
     } catch (error) {
