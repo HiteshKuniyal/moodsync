@@ -5,6 +5,7 @@ import { Sparkles, ArrowRight, Calendar } from 'lucide-react';
 const Guidance = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('moodSyncUser') || 'null');
   const [moodEntry, setMoodEntry] = useState(null);
 
   useEffect(() => {
