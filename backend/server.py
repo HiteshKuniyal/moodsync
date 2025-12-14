@@ -14,6 +14,10 @@ from emergentintegrations.llm.chat import LlmChat, UserMessage
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Setup logging first
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # MongoDB connection with error handling
 try:
     mongo_url = os.environ.get('MONGO_URL')
