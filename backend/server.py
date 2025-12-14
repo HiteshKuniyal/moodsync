@@ -14,13 +14,28 @@ from emergentintegrations.llm.chat import LlmChat, UserMessage
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]  # Emergent will inject correct DB_NAME in production
+# MongoDB connection with error handling
+try:
+    mongo_url = os.environ.get('MONGO_URL')
+    db_name = os.environ.get('DB_NAME')
+    
+    if not mongo_url:
+        logger.error("MONGO_URL environment variable not set!")
+        raise ValueError("MONGO_URL is required")
+    
+    if not db_name:
+        logger.warning("DB_NAME not set, using default: test_database")
+        db_name = 'test_database'
+    
+    client = AsyncIOMotorClient(mongo_url)
+    db = client[db_name]
+    logger.info(f"MongoDB client initialized for database: {db_name}")
+except Exception as e:
+    logger.error(f"Failed to initialize MongoDB: {str(e)}")
+    raise
 
 # Create the main app without a prefix
-app = FastAPI()
+app = FastAPI(title="Mood Sync API", version="1.0.0")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -164,12 +179,32 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint for Kubernetes liveness/readiness probes"""
-    return {"status": "healthy", "service": "mood-sync-backend"}
+    try:
+        # Test MongoDB connection
+        await db.command('ping')
+        return {"status": "healthy", "service": "mood-sync-backend", "database": "connected"}
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        raise HTTPException(status_code=503, detail=f"Service unavailable: {str(e)}")
 
 @app.get("/healthz")
 async def healthz():
-    """Alternative health check endpoint"""
+    """Alternative health check endpoint (basic liveness check)"""
     return {"status": "ok"}
+
+# Startup event to verify connections
+@app.on_event("startup")
+async def startup_event():
+    """Verify all connections on startup"""
+    try:
+        # Test MongoDB connection
+        await db.command('ping')
+        logger.info("✅ MongoDB connection successful")
+    except Exception as e:
+        logger.error(f"❌ MongoDB connection failed: {str(e)}")
+        logger.error(f"MONGO_URL: {os.environ.get('MONGO_URL', 'NOT SET')}")
+        logger.error(f"DB_NAME: {os.environ.get('DB_NAME', 'NOT SET')}")
+        raise
 
 @api_router.post("/mood/submit", response_model=MoodEntry)
 async def submit_mood(mood_input: MoodEntryCreate, request: Request):
