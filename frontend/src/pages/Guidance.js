@@ -94,18 +94,10 @@ const Guidance = () => {
           </div>
         </div>
 
-        {/* AI Guidance Letter */}
+        {/* AI Guidance Letter - Solid background for better readability on iOS */}
         <div
           data-testid="ai-guidance-content"
           className="bg-white rounded-3xl p-10 md:p-12 shadow-soft border border-border mb-8"
-          style={{
-            backgroundImage:
-              'url("https://images.unsplash.com/photo-1761420723341-964ca4758e99?crop=entropy&cs=srgb&fm=jpg&q=85")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundBlendMode: 'overlay',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          }}
         >
           <div className="prose prose-lg max-w-none">
             <div className="text-foreground/90 leading-relaxed whitespace-pre-line font-manrope">
