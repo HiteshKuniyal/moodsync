@@ -160,6 +160,17 @@ Please provide personalized wellness guidance and coping strategies. Address the
 async def root():
     return {"message": "Mood Sync API"}
 
+# Health check endpoints for Kubernetes
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Kubernetes liveness/readiness probes"""
+    return {"status": "healthy", "service": "mood-sync-backend"}
+
+@app.get("/healthz")
+async def healthz():
+    """Alternative health check endpoint"""
+    return {"status": "ok"}
+
 @api_router.post("/mood/submit", response_model=MoodEntry)
 async def submit_mood(mood_input: MoodEntryCreate, request: Request):
     try:
